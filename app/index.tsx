@@ -1,4 +1,5 @@
 import { Text, View } from "react-native";
+import MoonLogo1 from "@/icons/moonlogo1.svg";
 
 export default function Index() {
   return (
@@ -10,6 +11,7 @@ export default function Index() {
       }}
     >
       <Text>Lunar test</Text>
+      <MoonLogo1 width={100} height={100} />
     </View>
   );
 }
