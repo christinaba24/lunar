@@ -8,6 +8,8 @@ import {
   Dimensions,
 } from "react-native";
 
+import nurses from "@/assets/images/nurses.png";
+
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
@@ -21,12 +23,7 @@ const GroupScreen = () => {
       </View>
       <View style={styles.content}>
         <View style={styles.groupInfo}>
-          <Image
-            source={{
-              uri: "https://via.placeholder.com/100", // Replace with your image URL
-            }}
-            style={styles.groupImage}
-          />
+          <Image source={nurses} style={styles.groupImage} />
           <View style={styles.groupDetails}>
             <Text style={styles.groupName}>Night Nurses</Text>
             <Text style={styles.groupMembers}>82 members</Text>
@@ -93,6 +90,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#888",
     marginVertical: 5,
+    paddingBottom: 5,
   },
   leaveButton: {
     backgroundColor: "#000",
