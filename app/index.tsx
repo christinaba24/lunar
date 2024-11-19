@@ -3,7 +3,7 @@ import { Text, View, Image } from "react-native";
 import moonlogo1 from "../assets/icons/moonlogo1.png";
 import { Header } from "react-native/Libraries/NewAppScreen";
 import GroupHeader from "@/components/GroupHeader";
-import Feed from "@/components/Feed";
+import GroupFeed from "@/components/Feed";
 import React from "react";
 
 export default function Index() {
@@ -22,7 +22,7 @@ export default function Index() {
       {/* <Text>Lunar test</Text> */}
       {/* <Header /> */}
       <GroupHeader />
-      {/* <Feed shouldNavigateToComments={true} onPostPress={handlePostPress} /> */}
+      <GroupFeed shouldNavigateToComments={true} />
       <Image source={moonlogo1} />
     </View>
   );

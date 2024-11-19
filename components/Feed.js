@@ -8,7 +8,7 @@ import timeAgo from "@/utils/timeAgo";
 
 export default function GroupFeed({
   shouldNavigateToComments = false,
-  onPostPress, // determine nav behavior
+  //   onPostPress, // determine nav behavior
 }) {
   const [posts, setPosts] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -142,9 +142,10 @@ export default function GroupFeed({
           commentCount={item.comment_count}
           onVote={handleVote}
           onPress={() => {
-            if (onPostPress) {
-              onPostPress(item); // Call the provided onPostPress handler
-            }
+            console.log("Post pressed");
+            // if (onPostPress) {
+            //   onPostPress(item); // Call the provided onPostPress handler
+            // }
           }}
         />
       )}
