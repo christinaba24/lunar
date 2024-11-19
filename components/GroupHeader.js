@@ -8,8 +8,6 @@ import {
   Dimensions,
 } from "react-native";
 
-import Theme from "@/app-example/hooks/useThemeColor";
-
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
