@@ -1,17 +1,15 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "strict": true,
+    "baseUrl": ".", // Ensure paths are resolved from the project root
     "paths": {
-      "@/*": [
-        "./*"
-      ]
-    }
+      "@/*": ["./*"] // Map @/ to the project root
+    },
+    "strict": true, // Enable TypeScript's strict mode for better type safety
+    "jsx": "react-native", // Ensure JSX works properly in React Native
+    "skipLibCheck": true, // Skip type checking of library files for faster builds
+    "moduleResolution": "node" // Ensures compatibility with Node.js module resolution
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts"
-  ]
+  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"], // Include relevant files
+  "exclude": ["node_modules", "babel.config.js", "metro.config.js"] // Exclude unnecessary files
 }
