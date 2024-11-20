@@ -57,7 +57,7 @@ export default function Post({
     post = (
       <Link
         href={{
-          pathname: "/tabs/feed/details", // TODO: Update path to comment details
+          pathname: "/tabs/group/details", // TODO: Update path to comment details
           params: {
             id: id,
             username: username,
@@ -84,7 +84,7 @@ export default function Post({
     >
       <FontAwesome
         size={16}
-        icon={vote > 0 ? "fa-regular fa-heart" : "fa-solid fa-heart"}
+        name={vote > 0 ? "heart" : "heart-o"}
         color={Theme.colors.PurpleMedium}
       />
     </TouchableOpacity>
