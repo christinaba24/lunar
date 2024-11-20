@@ -1,37 +1,36 @@
 import { useState, useEffect } from "react";
-import { StyleSheet, FlatList, RefreshControl } from "react-native";
+import { StyleSheet, FlatList, RefreshControl, Text } from "react-native";
 import db from "@/database/db";
 import Theme from "@/assets/theme";
 import Post from "@/components/Post";
 import Loading from "@/components/Loading";
 import timeAgo from "@/utils/timeAgo";
 
-export default function GroupFeed({
-  shouldNavigateToComments = false,
-  //   onPostPress, // determine nav behavior
-}) {
+export default function GroupFeed({ shouldNavigateToComments = false }) {
   const [posts, setPosts] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [error, setError] = useState(null);
+  const user_id = "6bb59990-4f6b-4fd0-b475-64353b7e2abd";
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
 
   const fetchPosts = async () => {
     try {
       setIsLoading(true);
+      setError(null);
 
       // Get current user's ID for filtering (use later for pinned posts)
-      const {
-        data: { user },
-      } = await db.auth.getUser();
+      //   const {
+      //     data: { user },
+      //   } = await db.auth.getUser();
 
       let query = db
         .from("posts_with_counts")
         .select("*")
         .order("timestamp", { ascending: false });
-
-      // If we're fetching only the user's posts, add a filter
-      if (fetchUsersPostsOnly && user) {
-        query = query.eq("user_id", user.id);
-      }
 
       const { data: postsData, error: postsError } = await query;
 
@@ -42,11 +41,11 @@ export default function GroupFeed({
       }
 
       // If we have posts and a logged-in user, fetch their votes
-      if (postsData.length > 0 && user) {
+      if (postsData.length > 0) {
         const { data: votesData, error: votesError } = await db
           .from("likes")
           .select("post_id, vote")
-          .eq("user_id", user.id);
+          .eq("user_id", user_id);
 
         if (votesError) {
           console.error("Error fetching votes:", votesError.message);
@@ -69,7 +68,8 @@ export default function GroupFeed({
 
       setPosts(postsData);
     } catch (error) {
-      console.error("Unexpected error fetching posts:", err);
+      console.error("Unexpected error in fetchPosts:", error);
+      setError(`Unexpected error: ${error.message}`);
       setPosts([]);
     } finally {
       setIsLoading(false);
@@ -77,49 +77,56 @@ export default function GroupFeed({
     }
   };
 
-  const handleVote = async (postId, vote) => {
+  // Simplified handleVote that just updates the UI without making DB changes
+  const handleVote = async (postId) => {
     try {
+      // Optimistically update the UI
       setPosts((currentPosts) =>
         currentPosts.map((post) => {
           if (post.id === postId) {
-            const oldVote = post.vote || 0;
-            // Calculate the score difference
-            const scoreDiff = newVote - oldVote;
+            // Check if the user has already liked the post
+            if (post.vote === 1) {
+              post.vote -= 1; // Mark as unliked
+
+              post.like_count -= 1; // Decrement like count
+              return post; // If already liked, return as is
+            }
+
             return {
               ...post,
-              vote: newVote,
-              like_count: post.like_count + scoreDiff,
+              vote: 1, // Mark as liked
+              like_count: post.like_count + 1, // Increment like count
             };
           }
           return post;
         })
       );
+
+      // Ensure no duplicate likes exist in the database
       const { error: deleteError } = await db
         .from("likes")
         .delete()
         .eq("post_id", postId)
-        .eq("user_id", user.id);
+        .eq("user_id", user_id);
 
-      if (newVote !== 0) {
-        const { error: insertError } = await db.from("likes").insert({
-          post_id: postId,
-          user_id: user.id,
-          vote: newVote,
-        });
-
-        if (insertError) {
-          console.error("Error inserting vote:", insertError);
-          fetchPosts();
-        }
-      }
+      // Add the new like
+      const { error: insertError } = await db.from("likes").insert({
+        post_id: postId,
+        user_id: user_id,
+      });
 
       if (deleteError) {
-        console.error("Error deleting vote:", deleteError);
-        fetchPosts();
+        console.error("Error deleting previous like:", deleteError);
+        fetchPosts(); // Refresh posts in case of error
+      }
+
+      if (insertError) {
+        console.error("Error inserting like:", insertError);
+        fetchPosts(); // Refresh posts in case of error
       }
     } catch (err) {
-      console.error("Error submitting vote:", err);
-      fetchPosts();
+      console.error("Error liking post:", err);
+      fetchPosts(); // Refresh posts in case of error
     }
   };
 
@@ -127,9 +134,13 @@ export default function GroupFeed({
     return <Loading />;
   }
 
+  if (error) {
+    return <Text style={styles.errorText}>{error}</Text>;
+  }
+
   return (
     <FlatList
-      data={posts}
+      data={posts || []}
       renderItem={({ item }) => (
         <Post
           shouldNavigateOnPress={shouldNavigateToComments}
@@ -141,12 +152,6 @@ export default function GroupFeed({
           vote={item.vote}
           commentCount={item.comment_count}
           onVote={handleVote}
-          onPress={() => {
-            console.log("Post pressed");
-            // if (onPostPress) {
-            //   onPostPress(item); // Call the provided onPostPress handler
-            // }
-          }}
         />
       )}
       contentContainerStyle={styles.posts}
@@ -161,6 +166,7 @@ export default function GroupFeed({
           tintColor={Theme.colors.textPrimary}
         />
       }
+      ListEmptyComponent={<Text style={styles.emptyText}>No posts found</Text>}
     />
   );
 }
@@ -176,5 +182,16 @@ const styles = StyleSheet.create({
   },
   posts: {
     gap: 10,
+    padding: 10,
+  },
+  errorText: {
+    color: "red",
+    padding: 20,
+    textAlign: "center",
+  },
+  emptyText: {
+    textAlign: "center",
+    padding: 20,
+    color: Theme.colors.textSecondary,
   },
 });
