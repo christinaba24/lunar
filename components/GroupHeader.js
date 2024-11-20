@@ -7,18 +7,26 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
+import { useRouter } from "expo-router";
 
 import nurses from "@/assets/images/nurses.png";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-const GroupScreen = () => {
+// navigation . go back or href
+// link object
+
+export const GroupScreen = () => {
+  const router = useRouter();
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton}>
-          <Text style={styles.backText}>←</Text>
+          <Text style={styles.backText} onPress={() => router.back()}>
+            ←
+          </Text>
         </TouchableOpacity>
       </View>
       <View style={styles.content}>
@@ -47,21 +55,19 @@ const styles = StyleSheet.create({
     backgroundColor: "#AAAAFF",
   },
   header: {
-    height: 120,
+    height: 90,
     padding: 20,
     justifyContent: "center",
   },
   backButton: {
-    width: 30,
+    width: 20,
   },
   backText: {
-    fontSize: 24,
+    fontSize: 16,
     color: "#333",
   },
   content: {
     backgroundColor: "#fff",
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
     padding: 20,
     flex: 1,
   },
@@ -71,23 +77,28 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   groupImage: {
-    width: windowWidth * 0.2,
-    height: windowHeight * 0.1,
-    borderRadius: 18,
-    position: "absolute", // paddingRight: 40,
+    width: windowWidth * 0.25,
+    height: windowWidth * 0.25,
+    borderRadius: 16,
+    position: "absolute",
+    top: -30,
+    borderColor: "#fff",
+    borderWidth: 4,
   },
+
   groupDetails: {
-    marginLeft: 15,
     flex: 1,
-    marginLeft: 90,
+    marginLeft: 110,
+    // position: "absolute",
+    // marginBottom:
   },
   groupName: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: "bold",
     color: "#333",
   },
   groupMembers: {
-    fontSize: 14,
+    fontSize: 12,
     color: "#888",
     marginVertical: 5,
     paddingBottom: 5,

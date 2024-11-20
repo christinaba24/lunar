@@ -7,10 +7,12 @@ import { Link } from "expo-router";
 import Theme from "@/assets/theme";
 import Feed from "@/components/Feed";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import GroupScreen from "@/components/GroupHeader";
 
 export default function Home() {
   return (
     <View style={styles.container}>
+      <GroupScreen />
       <StatusBar style="light" />
       <Feed shouldNavigateToComments={true} />
       <Link href="/tabs/group/newpost" style={styles.postButtonContainer}>
