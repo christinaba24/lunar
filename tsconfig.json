@@ -8,8 +8,15 @@
     "strict": true, // Enable TypeScript's strict mode for better type safety
     "jsx": "react-native", // Ensure JSX works properly in React Native
     "skipLibCheck": true, // Skip type checking of library files for faster builds
-    "moduleResolution": "node" // Ensures compatibility with Node.js module resolution
+    "moduleResolution": "node", // Ensures compatibility with Node.js module resolution
+    "types": ["expo", "react", "react-native"] // Include Expo and React types
   },
-  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"], // Include relevant files
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts",
+    "assets/fonts/*" // Include the fonts directory explicitly
+  ],
   "exclude": ["node_modules", "babel.config.js", "metro.config.js"] // Exclude unnecessary files
 }

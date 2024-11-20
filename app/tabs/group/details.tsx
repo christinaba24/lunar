@@ -20,6 +20,7 @@ import CommentFeed from "@/components/CommentFeed";
 export default function Details() {
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const user_id = "6bb59990-4f6b-4fd0-b475-64353b7e2abd";
 
   // Get the post details from the route params
   const { id, username, timestamp, text, score, vote, commentCount } =
@@ -29,15 +30,15 @@ export default function Details() {
     try {
       setIsLoading(true);
 
-      // Get the current user's ID
-      const {
-        data: { user },
-      } = await db.auth.getUser();
+      //   // Get the current user's ID
+      //   const {
+      //     data: { user },
+      //   } = await db.auth.getUser();
 
       // Insert the new comment
       const { error } = await db.from("comments").insert({
         post_id: id,
-        user_id: user?.id || null,
+        user_id: user_id,
         username: "Anonymous",
         text: inputText,
       });

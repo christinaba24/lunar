@@ -134,17 +134,21 @@ const styles = StyleSheet.create({
     marginLeft: 16,
   },
   text: {
-    color: Theme.colors.textPrimary,
-    fontWeight: "bold",
-    fontSize: Theme.sizes.textMedium,
+    color: Theme.colors.textBlack,
+    fontSize: Theme.sizes.body,
+    fontFamily: "SF-Pro-Display-Regular",
   },
   username: {
     color: Theme.colors.textSecondary,
     fontWeight: "bold",
     marginLeft: 8,
+    fontSize: Theme.sizes.title3,
+    fontFamily: "SF-Pro-Display-Bold",
   },
   timestamp: {
-    color: Theme.colors.textSecondary,
+    color: Theme.colors.textGray,
+    fontFamily: "SF-Pro-Display-Regular",
+    fontSize: Theme.sizes.callout,
     flex: 2,
   },
   comment: {
@@ -152,13 +156,16 @@ const styles = StyleSheet.create({
     flex: 3,
   },
   commentCount: {
-    color: Theme.colors.textSecondary,
+    color: Theme.colors.textGray,
     marginLeft: 8,
+    fontFamily: "SF-Pro-Display-Regular",
+    fontSize: Theme.sizes.callout,
   },
   score: {
     color: Theme.colors.textHighlighted,
     fontWeight: "bold",
     fontSize: Theme.sizes.textLarge,
+    fontFamily: "SF-Pro-Display-Bold",
   },
   // Make sure the buttons have a lot of padding to increase the area of the touch target.
   upvoteButton: {
