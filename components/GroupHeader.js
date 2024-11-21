@@ -10,6 +10,7 @@ import {
 import { useRouter } from "expo-router";
 
 import nurses from "@/assets/images/nurses.png";
+import theme from "@/assets/theme";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -65,6 +66,7 @@ const styles = StyleSheet.create({
   backText: {
     fontSize: 16,
     color: "#333",
+    paddingBottom: 80,
   },
   content: {
     backgroundColor: "#fff",
@@ -117,7 +119,7 @@ const styles = StyleSheet.create({
 
   description: {
     fontSize: 16,
-    color: "#555",
+    color: theme.colors.textBlack,
     lineHeight: 22,
   },
 });
