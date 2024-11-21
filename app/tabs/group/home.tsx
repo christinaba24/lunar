@@ -50,12 +50,12 @@ export default function Home() {
       </View>
 
       <View style={styles.postContainer}>
-        <Feed shouldNavigateToComments={true} filter={activeTab} />
+        <Feed shouldNavigateToComments={true} />
       </View>
 
-      <Link href="/tabs/group/newpost" style={styles.postButtonContainer}>
+      <Link href="./newpost" style={styles.postButtonContainer}>
         <View style={styles.postButton}>
-          <FontAwesome size={32} name="plus" color={Theme.colors.textBlack} />
+          <FontAwesome size={32} name="plus" color={Theme.colors.White} />
         </View>
       </Link>
     </View>
@@ -112,6 +112,8 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     alignItems: "center",
     justifyContent: "center",
+    // FontAwesome 'plus' icon is a bit off-center, so we manually center it by
+    // tweaking the padding
     paddingTop: 2,
     paddingLeft: 1,
   },
