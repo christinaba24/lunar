@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -13,13 +13,14 @@ import nurses from "@/assets/images/nurses.png";
 import theme from "@/assets/theme";
 
 const windowWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
-
-// navigation . go back or href
-// link object
 
 export const GroupScreen = () => {
   const router = useRouter();
+  const [isMember, setIsMember] = useState(true); // Initial state: true means "Leave"
+
+  const toggleMembership = () => {
+    setIsMember((prevState) => !prevState);
+  };
 
   return (
     <View style={styles.container}>
@@ -36,8 +37,13 @@ export const GroupScreen = () => {
           <View style={styles.groupDetails}>
             <Text style={styles.groupName}>Night Nurses</Text>
             <Text style={styles.groupMembers}>82 members</Text>
-            <TouchableOpacity style={styles.leaveButton}>
-              <Text style={styles.leaveButtonText}>Leave</Text>
+            <TouchableOpacity
+              style={styles.leaveButton}
+              onPress={toggleMembership}
+            >
+              <Text style={styles.leaveButtonText}>
+                {isMember ? "Leave" : "Join"}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -56,7 +62,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#AAAAFF",
   },
   header: {
-    height: 90,
+    height: 150, // header length
     padding: 20,
     justifyContent: "center",
   },
@@ -66,7 +72,7 @@ const styles = StyleSheet.create({
   backText: {
     fontSize: 16,
     color: "#333",
-    paddingBottom: 80,
+    // paddingBottom: 10, // controls the spacing of back arrow
   },
   content: {
     backgroundColor: "#fff",
@@ -77,6 +83,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 20,
+    fontFamily: "SF-Pro-Display-Regular",
   },
   groupImage: {
     width: windowWidth * 0.25,
@@ -87,12 +94,11 @@ const styles = StyleSheet.create({
     borderColor: "#fff",
     borderWidth: 4,
   },
-
   groupDetails: {
     flex: 1,
     marginLeft: 110,
-    // position: "absolute",
-    // marginBottom:
+    marginTop: -10, // controlling night nurses -> leave box
+    fontFamily: "SF-Pro-Display-Regular",
   },
   groupName: {
     fontSize: 16,
@@ -116,7 +122,6 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 14,
   },
-
   description: {
     fontSize: 16,
     color: theme.colors.textBlack,

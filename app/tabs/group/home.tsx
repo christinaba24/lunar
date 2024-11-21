@@ -1,8 +1,5 @@
-<<<<<<< Updated upstream
-import { StyleSheet, View, Text } from "react-native";
-=======
-import { StyleSheet, View } from "react-native";
->>>>>>> Stashed changes
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import { useState } from "react";
 
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { StatusBar } from "expo-status-bar";
@@ -10,23 +7,52 @@ import { Link } from "expo-router";
 
 import Theme from "@/assets/theme";
 import Feed from "@/components/Feed";
-<<<<<<< Updated upstream
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import GroupScreen from "@/components/GroupHeader";
-=======
->>>>>>> Stashed changes
 
 export default function Home() {
+  const [activeTab, setActiveTab] = useState("top"); // State to track the active tab ("top" or "new")
+
   return (
     <View style={styles.container}>
-<<<<<<< Updated upstream
       <GroupScreen />
       <StatusBar style="light" />
-      <Feed shouldNavigateToComments={true} />
-=======
-      <StatusBar style="light" />
-      <Feed shouldNavigateToComments={true} onPostPress={undefined} />
->>>>>>> Stashed changes
+
+      <View style={styles.tabContainer}>
+        <TouchableOpacity
+          style={styles.tab}
+          onPress={() => setActiveTab("top")}
+        >
+          <Text
+            style={[
+              styles.tabText,
+              activeTab === "top" && styles.activeTabText,
+            ]}
+          >
+            Top
+          </Text>
+          {activeTab === "top" && <View style={styles.dot} />}
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.tab}
+          onPress={() => setActiveTab("new")}
+        >
+          <Text
+            style={[
+              styles.tabText,
+              activeTab === "new" && styles.activeTabText,
+            ]}
+          >
+            New
+          </Text>
+          {activeTab === "new" && <View style={styles.dot} />}
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.postContainer}>
+        <Feed shouldNavigateToComments={true} filter={activeTab} />
+      </View>
+
       <Link href="/tabs/group/newpost" style={styles.postButtonContainer}>
         <View style={styles.postButton}>
           <FontAwesome size={32} name="plus" color={Theme.colors.textBlack} />
@@ -42,21 +68,38 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: Theme.colors.White,
   },
-<<<<<<< Updated upstream
-  titleView: {
+  tabContainer: {
     flexDirection: "row",
-    padding: 12,
+    justifyContent: "flex-start",
+    width: "100%",
+    paddingHorizontal: 24,
+    marginBottom: 8,
+  },
+  tab: {
+    marginRight: 16,
     alignItems: "center",
-    justifyContent: "space-between",
-    width: "20%",
   },
-  titleText: {
+  tabText: {
+    fontSize: 16,
+    fontWeight: "normal",
+    color: Theme.colors.textGray,
+    fontFamily: "TestTiemposHeadline-Medium",
+  },
+  activeTabText: {
     color: Theme.colors.textBlack,
-    fontSize: Theme.sizes.title1,
-    fontWeight: "bold",
+    fontFamily: "TestTiemposHeadline-Medium",
   },
-=======
->>>>>>> Stashed changes
+  dot: {
+    width: 4,
+    height: 4,
+    borderRadius: 3,
+    backgroundColor: Theme.colors.textBlack,
+    marginTop: 4,
+  },
+  postContainer: {
+    flex: 1,
+    width: "100%",
+  },
   postButtonContainer: {
     position: "absolute",
     right: 8,
@@ -69,11 +112,6 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     alignItems: "center",
     justifyContent: "center",
-<<<<<<< Updated upstream
-    // FontAwesome 'plus' icon is a bit off-center, so we manually center it by
-    // tweaking the padding
-=======
->>>>>>> Stashed changes
     paddingTop: 2,
     paddingLeft: 1,
   },
