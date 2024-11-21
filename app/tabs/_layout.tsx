@@ -29,7 +29,7 @@ export default function Layout() {
           } else if (route.name === "profile") {
             iconName = "user";
           }
-          return <FontAwesome size={size} name={"home"} color={color} />;
+          return <FontAwesome size={size} name={"home"} color={color} />; // idk
         },
       })}
     >
