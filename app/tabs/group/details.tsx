@@ -20,7 +20,7 @@ import CommentFeed from "@/components/CommentFeed";
 export default function Details() {
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  // const user_id = "6bb59990-4f6b-4fd0-b475-64353b7e2abd";
+  //const user_id = "6bb59990-4f6b-4fd0-b475-64353b7e2abd";
 
   // Get the post details from the route params
   const { id, username, timestamp, text, score, vote, commentCount, user_id } =
@@ -63,51 +63,54 @@ export default function Details() {
   const submitDisabled = isLoading || inputText.length === 0;
 
   return (
-    <View style={styles.container}>
-      <Post
-        id={id}
-        username={username}
-        timestamp={timestamp}
-        text={text}
-        score={score}
-        vote={vote}
-        commentCount={commentCount}
-        onVote={undefined}
-        user_id={user_id}
-      />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 65 : 0}
-        style={styles.keyboardContainer}
-      >
-        <CommentFeed postId={id} />
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            value={inputText}
-            onChangeText={setInputText}
-            placeholder={"Write a comment..."}
-            placeholderTextColor={Theme.colors.textGray}
-            editable={!isLoading}
-          />
-          <TouchableOpacity
-            style={styles.sendButton}
-            onPress={submitComment}
-            disabled={submitDisabled}
-          >
-            <FontAwesome
-              size={24}
-              name="send"
-              color={
-                submitDisabled
-                  ? Theme.colors.textGray
-                  : Theme.colors.PurpleMedium
-              }
+    console.log(timestamp),
+    (
+      <View style={styles.container}>
+        <Post
+          id={id}
+          username={username}
+          timestamp={timestamp}
+          text={text}
+          score={score}
+          vote={vote}
+          commentCount={commentCount}
+          onVote={undefined}
+          user_id={user_id}
+        />
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 65 : 0}
+          style={styles.keyboardContainer}
+        >
+          <CommentFeed postId={id} />
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              value={inputText}
+              onChangeText={setInputText}
+              placeholder={"Write a comment..."}
+              placeholderTextColor={Theme.colors.textGray}
+              editable={!isLoading}
             />
-          </TouchableOpacity>
-        </View>
-      </KeyboardAvoidingView>
-    </View>
+            <TouchableOpacity
+              style={styles.sendButton}
+              onPress={submitComment}
+              disabled={submitDisabled}
+            >
+              <FontAwesome
+                size={24}
+                name="send"
+                color={
+                  submitDisabled
+                    ? Theme.colors.textGray
+                    : Theme.colors.PurpleMedium
+                }
+              />
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
+      </View>
+    )
   );
 }
 

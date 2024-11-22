@@ -20,7 +20,7 @@ export default function Post({
   vote,
   commentCount,
   onVote,
-  user_id, // Add user_id as a prop
+  user_id,
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const [isPinned, setIsPinned] = useState(false); // Add state for pinned status
@@ -92,6 +92,13 @@ export default function Post({
           />
           <Text style={styles.commentCount}>{commentCount}</Text>
         </View>
+        {/* <View style={styles.threedots}>
+          <FontAwesome
+            size={Theme.sizes.icons}
+            name="ellipsis-h"
+            color={"#888"}
+          />
+        </View> */}
       </View>
     </TouchableOpacity>
   );
@@ -109,6 +116,7 @@ export default function Post({
             score: score,
             commentCount: commentCount,
             vote: vote,
+            user_id: user_id,
           },
         }}
         asChild={true}
