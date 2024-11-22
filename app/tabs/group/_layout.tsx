@@ -67,10 +67,10 @@ export default function FeedLayout() {
               style={{
                 color: Theme.colors.textBlack,
                 fontSize: Theme.sizes.title2,
-                fontWeight: "bold",
+                // fontWeight: "bold",
               }}
             >
-              New Post
+              Create a post
             </Text>
           ),
           headerLeft: () => (

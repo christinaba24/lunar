@@ -15,6 +15,7 @@ import Theme from "@/assets/theme";
 export default function NewPost() {
   const [username, setUsername] = useState(null);
   const [inputText, setInputText] = useState("");
+  const [isAnonymous, setIsAnonymous] = useState(false); // State for the toggle
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const navigation = useNavigation();
@@ -38,7 +39,7 @@ export default function NewPost() {
 
       const { error } = await db.from("posts").insert({
         user_id: user_id || null,
-        username: username || "Anonymous",
+        username: isAnonymous ? "Anonymous" : username, // Use the toggle state
         text: inputText.trim(),
       });
 
@@ -83,8 +84,32 @@ export default function NewPost() {
     });
   }, [inputText, isLoading, navigation]);
 
+  const handleToggle = () => {
+    setIsAnonymous((prev) => !prev);
+  };
+
   return (
     <View style={styles.container}>
+      <View style={styles.toggleContainer}>
+        <Pressable onPress={handleToggle} style={styles.toggleButton}>
+          <Text style={[styles.toggleText, isAnonymous && styles.activeText]}>
+            Anonymous
+          </Text>
+          <View
+            style={[
+              styles.toggleSwitch,
+              isAnonymous ? styles.switchOn : styles.switchOff,
+            ]}
+          >
+            <View
+              style={[
+                styles.toggleCircle,
+                isAnonymous ? styles.circleOn : styles.circleOff,
+              ]}
+            />
+          </View>
+        </Pressable>
+      </View>
       <TextInput
         style={styles.input}
         value={inputText}
@@ -104,20 +129,51 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: Theme.colors.White,
   },
-  nameInputContainer: {
+  toggleContainer: {
     width: "100%",
     padding: 16,
-    gap: 8,
+    alignItems: "flex-start",
   },
-  nameInputPrompt: {
-    color: Theme.colors.textBlack,
+  toggleButton: {
+    flexDirection: "row",
+    backgroundColor: "#EDEBFF",
+    borderRadius: 6,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
   },
-  nameInput: {
-    color: Theme.colors.textGray,
+  toggleText: {
+    fontSize: 16,
+    color: "#7A5AF8",
+    marginRight: 8,
   },
-  headerButtonTextPrimary: {
-    fontSize: 18,
-    color: Theme.colors.textBlack,
+  activeText: {
+    color: Theme.colors.PurpleDark,
+  },
+  toggleSwitch: {
+    width: 40,
+    height: 20,
+    borderRadius: 20,
+    justifyContent: "center",
+    backgroundColor: "#CFCFCF",
+  },
+  switchOn: {
+    backgroundColor: Theme.colors.PurpleDark,
+  },
+  switchOff: {
+    backgroundColor: "#CFCFCF",
+  },
+  toggleCircle: {
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: Theme.colors.White,
+    position: "absolute",
+  },
+  circleOn: {
+    left: 22,
+  },
+  circleOff: {
+    left: 2,
   },
   input: {
     color: Theme.colors.textBlack,
