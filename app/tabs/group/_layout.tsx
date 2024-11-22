@@ -36,6 +36,7 @@ export default function FeedLayout() {
           color: Theme.colors.textBlack,
         },
         headerTitleAlign: "center",
+        headerShown: false,
       }}
     >
       <Stack.Screen
@@ -80,6 +81,7 @@ export default function FeedLayout() {
             />
           ),
           headerRight: () => null,
+          headerShown: true,
         }}
       />
       <Stack.Screen
@@ -87,6 +89,7 @@ export default function FeedLayout() {
         options={{
           title: "Comments",
           headerBackTitle: "Back",
+          headerShown: false,
         }}
       />
     </Stack>

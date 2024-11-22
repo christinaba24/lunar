@@ -18,7 +18,6 @@ export default function Layout() {
 
   return (
     <Tabs
-<<<<<<< HEAD
     //   screenOptions={({ route }) => ({
     //     tabBarStyle: {
     //       backgroundColor: Theme.colors.backgroundPrimary || "#1c1c1e", // Dark background
@@ -42,43 +41,25 @@ export default function Layout() {
     //       return <FontAwesome size={size} name={iconName} color={color} />;
     //     },
     //   })}
-=======
-      screenOptions={({ route }) => ({
-        tabBarStyle: {
-          backgroundColor: Theme.colors.White,
-          borderTopWidth: 0, // Remove top border for a cleaner look
-        },
-        tabBarActiveTintColor: Theme.colors.PurpleMedium || "#ffa500", // Purple for active icons
-        tabBarInactiveTintColor: Theme.colors.White || "#ffffff", // White for inactive icons
-        tabBarLabelStyle: {
-          fontSize: 12, // Adjust text size
-        },
-        tabBarIconStyle: {
-          marginBottom: -4, // Adjust icon spacing
-        },
-        tabBarIcon: ({ size, color }) => {
-          let iconName;
-          if (route.name === "feed") {
-            iconName = "home";
-          } else if (route.name === "profile") {
-            iconName = "user";
-          }
-          return <FontAwesome size={size} name={"home"} color={color} />; // idk
-        },
-      })}
->>>>>>> 29844667fc1228b5e120f12093d7b8d0e4dbab30
     >
       <Tabs.Screen
-        name="group/home"
+        name="/group/home"
         options={{
           title: "Home",
           headerShown: false,
         }}
       />
       <Tabs.Screen
-        name="tabs"
+        name="group"
         options={{
-          title: "Tabs",
+          title: "Home",
+          headerShown: false,
+        }}
+      />
+      <Tabs.Screen
+        name="home"
+        options={{
+          title: "Home",
           headerShown: false,
         }} // is this supposed to be here
       />
