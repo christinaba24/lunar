@@ -18,6 +18,7 @@ export default function Home() {
       <GroupScreen />
       <StatusBar style="light" />
 
+      {/* Tab navigation */}
       <View style={styles.tabContainer}>
         <TouchableOpacity
           style={styles.tab}
@@ -49,10 +50,12 @@ export default function Home() {
         </TouchableOpacity>
       </View>
 
+      {/* Feed component */}
       <View style={styles.postContainer}>
-        <Feed shouldNavigateToComments={true} />
+        <Feed shouldNavigateToComments={true} topPosts={activeTab === "top"} />
       </View>
 
+      {/* New post button */}
       <Link href="./newpost" style={styles.postButtonContainer}>
         <View style={styles.postButton}>
           <FontAwesome size={32} name="plus" color={Theme.colors.White} />
@@ -107,9 +110,9 @@ const styles = StyleSheet.create({
   },
   postButton: {
     backgroundColor: Theme.colors.PurpleMedium,
-    height: 48,
-    width: 48,
-    borderRadius: 24,
+    height: 60,
+    width: 60,
+    borderRadius: 30,
     alignItems: "center",
     justifyContent: "center",
     // FontAwesome 'plus' icon is a bit off-center, so we manually center it by

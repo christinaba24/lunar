@@ -6,31 +6,38 @@ import Post from "@/components/Post";
 import Loading from "@/components/Loading";
 import timeAgo from "@/utils/timeAgo";
 
-export default function GroupFeed({ shouldNavigateToComments = false }) {
+export default function GroupFeed({
+  shouldNavigateToComments = false,
+  topPosts = false, // Determines whether to fetch top or new posts
+}) {
   const [posts, setPosts] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState(null);
   const user_id = "6bb59990-4f6b-4fd0-b475-64353b7e2abd";
 
+  // Fetch posts whenever `topPosts` changes
   useEffect(() => {
     fetchPosts();
-  }, []);
+  }, [topPosts]); // Add `topPosts` as a dependency
 
   const fetchPosts = async () => {
     try {
       setIsLoading(true);
       setError(null);
 
-      // Get current user's ID for filtering (use later for pinned posts)
-      //   const {
-      //     data: { user },
-      //   } = await db.auth.getUser();
-
       let query = db
         .from("posts_with_counts")
         .select("*")
         .order("timestamp", { ascending: false });
+
+      if (topPosts) {
+        // Fetch top posts (sorted by like_count)
+        query = db
+          .from("posts_with_counts")
+          .select("*")
+          .order("like_count", { ascending: false });
+      }
 
       const { data: postsData, error: postsError } = await query;
 
@@ -40,7 +47,6 @@ export default function GroupFeed({ shouldNavigateToComments = false }) {
         return;
       }
 
-      // If we have posts and a logged-in user, fetch their votes
       if (postsData.length > 0) {
         const { data: votesData, error: votesError } = await db
           .from("likes")
@@ -50,12 +56,10 @@ export default function GroupFeed({ shouldNavigateToComments = false }) {
         if (votesError) {
           console.error("Error fetching votes:", votesError.message);
         } else {
-          // Create a map of post_id to vote value
           const votesMap = Object.fromEntries(
             votesData.map((vote) => [vote.post_id, vote.vote])
           );
 
-          // Merge the votes into the posts data
           const postsWithVotes = postsData.map((post) => ({
             ...post,
             vote: votesMap[post.id] || 0,
@@ -77,56 +81,44 @@ export default function GroupFeed({ shouldNavigateToComments = false }) {
     }
   };
 
-  // Simplified handleVote that just updates the UI without making DB changes
   const handleVote = async (postId) => {
     try {
-      // Optimistically update the UI
       setPosts((currentPosts) =>
         currentPosts.map((post) => {
           if (post.id === postId) {
-            // Check if the user has already liked the post
             if (post.vote === 1) {
-              post.vote -= 1; // Mark as unliked
-
-              post.like_count -= 1; // Decrement like count
-              return post; // If already liked, return as is
+              post.vote -= 1;
+              post.like_count -= 1;
+              return post;
             }
-
             return {
               ...post,
-              vote: 1, // Mark as liked
-              like_count: post.like_count + 1, // Increment like count
+              vote: 1,
+              like_count: post.like_count + 1,
             };
           }
           return post;
         })
       );
 
-      // Ensure no duplicate likes exist in the database
       const { error: deleteError } = await db
         .from("likes")
         .delete()
         .eq("post_id", postId)
         .eq("user_id", user_id);
 
-      // Add the new like
       const { error: insertError } = await db.from("likes").insert({
         post_id: postId,
         user_id: user_id,
       });
 
-      if (deleteError) {
-        console.error("Error deleting previous like:", deleteError);
-        fetchPosts(); // Refresh posts in case of error
-      }
-
-      if (insertError) {
-        console.error("Error inserting like:", insertError);
-        fetchPosts(); // Refresh posts in case of error
+      if (deleteError || insertError) {
+        console.error("Error updating vote:", deleteError || insertError);
+        fetchPosts(); // Refresh in case of error
       }
     } catch (err) {
       console.error("Error liking post:", err);
-      fetchPosts(); // Refresh posts in case of error
+      fetchPosts(); // Refresh in case of error
     }
   };
 
@@ -152,6 +144,7 @@ export default function GroupFeed({ shouldNavigateToComments = false }) {
           vote={item.vote}
           commentCount={item.comment_count}
           onVote={handleVote}
+          user_id={item.user_id}
         />
       )}
       contentContainerStyle={styles.posts}
@@ -172,11 +165,6 @@ export default function GroupFeed({ shouldNavigateToComments = false }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    backgroundColor: Theme.colors.White,
-  },
   postsContainer: {
     width: "100%",
   },

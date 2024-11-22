@@ -20,6 +20,7 @@ export default function NewPost() {
   const router = useRouter();
   const navigation = useNavigation();
   const user_id = "6bb59990-4f6b-4fd0-b475-64353b7e2abd";
+  const other_user_id = "2bbcaafe-ead1-4542-9ca6-7560bca59855";
 
   const submitPost = async () => {
     if (!inputText.trim() || isLoading) return;
@@ -38,7 +39,7 @@ export default function NewPost() {
       const username = data[0].username;
 
       const { error } = await db.from("posts").insert({
-        user_id: user_id || null,
+        user_id: isAnonymous ? other_user_id : user_id,
         username: isAnonymous ? "Anonymous" : username, // Use the toggle state
         text: inputText.trim(),
       });

@@ -20,10 +20,10 @@ import CommentFeed from "@/components/CommentFeed";
 export default function Details() {
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const user_id = "6bb59990-4f6b-4fd0-b475-64353b7e2abd";
+  // const user_id = "6bb59990-4f6b-4fd0-b475-64353b7e2abd";
 
   // Get the post details from the route params
-  const { id, username, timestamp, text, score, vote, commentCount } =
+  const { id, username, timestamp, text, score, vote, commentCount, user_id } =
     useLocalSearchParams();
 
   const submitComment = async () => {
@@ -73,6 +73,7 @@ export default function Details() {
         vote={vote}
         commentCount={commentCount}
         onVote={undefined}
+        user_id={user_id}
       />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}

@@ -67,10 +67,10 @@ export default function FeedLayout() {
               style={{
                 color: Theme.colors.textBlack,
                 fontSize: Theme.sizes.title2,
-                // fontWeight: "bold",
+                fontWeight: "bold",
               }}
             >
-              Create a post
+              New Post
             </Text>
           ),
           headerLeft: () => (
@@ -89,7 +89,7 @@ export default function FeedLayout() {
         options={{
           title: "Comments",
           headerBackTitle: "Back",
-          headerShown: false,
+          headerShown: true,
         }}
       />
     </Stack>
