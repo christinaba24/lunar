@@ -43,12 +43,44 @@
 //   );
 // }
 
+// import React from "react";
+// import { View, Text, Button, StyleSheet } from "react-native";
+// import { Link, useNavigation } from "expo-router";
+// import GroupPage from "./tabs/group/details";
+// import GroupHeader from "@/components/GroupHeader";
+// import { GroupScreen } from "@/components/GroupHeader";
+
+// export default function Home() {
+//   return (
+//     <View style={styles.container}>
+//       <Text style={styles.text}>Welcome to the Home Page!</Text>
+//       <Link href="/tabs/group/home" style={styles.button}>
+//         <Text>Go to Group Screen</Text>
+//       </Link>
+//     </View>
+//   );
+// }
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: "center",
+//     alignItems: "center",
+//   },
+//   text: {
+//     fontSize: 20,
+//     marginBottom: 20,
+//   },
+//   button: {
+//     padding: 10,
+//     backgroundColor: "#007bff",
+//     borderRadius: 5,
+//   },
+// });
+
 import React from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
-import { Link, useNavigation } from "expo-router";
-import GroupPage from "./tabs/group/details";
-import GroupHeader from "@/components/GroupHeader";
-import { GroupScreen } from "@/components/GroupHeader";
+import { View, Text, StyleSheet } from "react-native";
+import { Link } from "expo-router";
 
 export default function Home() {
   return (
