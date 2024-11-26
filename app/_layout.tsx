@@ -17,28 +17,44 @@ export default function RootLayout() {
 
   useEffect(() => {
     const fetchOnboardingStatus = async () => {
-      const status = await AsyncStorage.getItem("onboardingComplete");
-      setOnboardingComplete(status === "true");
-      setLoading(false);
+      try {
+        const status = await AsyncStorage.getItem("onboardingComplete");
+        console.log("Onboarding status:", status); // Log the status for debugging
+        setOnboardingComplete(status === "true");
+      } catch (error) {
+        console.error("Error fetching onboarding status:", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchOnboardingStatus();
   }, []);
 
+  useEffect(() => {
+    console.log("isOnboardingComplete:", isOnboardingComplete);
+    console.log("loading:", loading);
+  }, [isOnboardingComplete, loading]);
+
   if (!fontsLoaded || loading) {
     return null; // Optional: Add a loading spinner here if necessary
   }
+  console.log(
+    "initialRouteName:",
+    loading ? null : isOnboardingComplete ? "index" : "onboarding"
+  );
 
   return (
     <Stack
       screenOptions={{
         headerShown: false,
       }}
-      // initialRouteName="onboarding"
-      initialRouteName={isOnboardingComplete ? "home" : "onboarding"}
+      initialRouteName={
+        loading ? undefined : isOnboardingComplete ? "index" : "onboarding"
+      }
     >
       <Stack.Screen name="onboarding" options={{ headerShown: false }} />
-      <Stack.Screen name="home" options={{ headerShown: false }} />
+      <Stack.Screen name="index" options={{ headerShown: false }} />
     </Stack>
   );
 }
