@@ -6,7 +6,8 @@ import { Link } from "expo-router";
 import Theme from "@/assets/theme";
 import personIcon1 from "@/assets/images/personicon.png";
 import personIcon2 from "@/assets/images/man.png";
-import { db } from "@/database/db";
+import db from "@/database/db";
+
 
 const CURRENT_USER_ID = "6bb59990-4f6b-4fd0-b475-64353b7e2abd";
 

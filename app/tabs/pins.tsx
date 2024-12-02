@@ -6,11 +6,12 @@ import Theme from "@/assets/theme";
 const CURRENT_USER_ID = "6bb59990-4f6b-4fd0-b475-64353b7e2abd";
 
 export default function Pins() {
-  return (
-    <View style={styles.container}>
-      <PinFeed userId={CURRENT_USER_ID} />
-    </View>
-  );
+    console.log("Pins component - Current User ID:", CURRENT_USER_ID);
+    return (
+        <View style={styles.container}>
+            <PinFeed userId={CURRENT_USER_ID} />
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
