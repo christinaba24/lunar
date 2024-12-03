@@ -12,7 +12,7 @@ import twoIcons from "@/assets/icons/twoicons.png";
 import starBottom from "@/assets/icons/starbottom.png";
 import starRight from "@/assets/icons/starright.png";
 
-export default function EmailIndex() {
+export default function AllSetIndex() {
   const router = useRouter();
 
   return (
@@ -28,17 +28,17 @@ export default function EmailIndex() {
         <Image source={twoIcons} style={styles.twoIcons} />
       </View>
 
-      <Text style={styles.headerText}>Enter email</Text>
+      <Text style={styles.headerText}>Congrats, you're all set!</Text>
 
-      <TextInput style={styles.inputText}>
-        <Text style={styles.inputText}>Enter your email</Text>
-      </TextInput>
+      <Text style={styles.subText}>
+        Just a few more questions to get you started...
+      </Text>
 
       <TouchableOpacity
         style={styles.continueButton}
-        onPress={() => router.push("./password")}
+        onPress={() => router.push("./occupation")}
       >
-        <Text style={styles.continueButtonText}>Continue</Text>
+        <Text style={styles.continueButtonText}>Start</Text>
       </TouchableOpacity>
       <Image source={starBottom} style={styles.starBottom} />
     </View>
@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
+    alignItems: "center",
     backgroundColor: "#9C9CFF",
     paddingTop: 70,
     paddingHorizontal: 30,
@@ -84,11 +85,18 @@ const styles = StyleSheet.create({
     top: 0,
   },
   headerText: {
-    fontSize: 20,
+    fontSize: 26,
     fontWeight: "bold",
-    marginBottom: 25,
+    marginBottom: 8,
     color: "#000",
     fontFamily: "TestTiemposHeadline-Medium",
+    alignItems: "center",
+  },
+  subText: {
+    fontSize: 16,
+    marginBottom: 25,
+    color: "#000",
+    fontFamily: "SF-Pro-Display-Regular",
     alignItems: "flex-start",
   },
   inputText: {
@@ -104,7 +112,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#000",
     borderRadius: 25,
     paddingVertical: 15,
-    paddingHorizontal: 130,
+    paddingHorizontal: 140,
     marginBottom: 15,
   },
   continueButtonText: {

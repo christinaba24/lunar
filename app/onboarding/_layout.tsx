@@ -53,6 +53,9 @@ export default function OnboardingLayout() {
       {/* Main onboarding entry point */}
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="email" options={{ headerShown: false }} />
+      <Stack.Screen name="password" options={{ headerShown: false }} />
+      <Stack.Screen name="verify" options={{ headerShown: false }} />
+      <Stack.Screen name="allset" options={{ headerShown: false }} />
       <Stack.Screen name="complete" options={{ headerShown: false }} />
     </Stack>
   );

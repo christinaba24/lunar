@@ -12,7 +12,7 @@ import twoIcons from "@/assets/icons/twoicons.png";
 import starBottom from "@/assets/icons/starbottom.png";
 import starRight from "@/assets/icons/starright.png";
 
-export default function EmailIndex() {
+export default function VerifyIndex() {
   const router = useRouter();
 
   return (
@@ -28,15 +28,49 @@ export default function EmailIndex() {
         <Image source={twoIcons} style={styles.twoIcons} />
       </View>
 
-      <Text style={styles.headerText}>Enter email</Text>
+      <Text style={styles.headerText}>Verify email</Text>
 
-      <TextInput style={styles.inputText}>
-        <Text style={styles.inputText}>Enter your email</Text>
-      </TextInput>
+      <View style={styles.verifyContainer}>
+        <TextInput
+          style={styles.inputText}
+          maxLength={1}
+          keyboardType="number-pad"
+        >
+          <Text style={styles.inputText}></Text>
+        </TextInput>
+        <TextInput
+          style={styles.inputText}
+          maxLength={1}
+          keyboardType="number-pad"
+        >
+          <Text style={styles.inputText}></Text>
+        </TextInput>
+        <TextInput
+          style={styles.inputText}
+          maxLength={1}
+          keyboardType="number-pad"
+        >
+          <Text style={styles.inputText}></Text>
+        </TextInput>
+        <TextInput
+          style={styles.inputText}
+          maxLength={1}
+          keyboardType="number-pad"
+        >
+          <Text style={styles.inputText}></Text>
+        </TextInput>
+        <TextInput
+          style={styles.inputText}
+          maxLength={1}
+          keyboardType="number-pad"
+        >
+          <Text style={styles.inputText}></Text>
+        </TextInput>
+      </View>
 
       <TouchableOpacity
         style={styles.continueButton}
-        onPress={() => router.push("./password")}
+        onPress={() => router.push("./allset")}
       >
         <Text style={styles.continueButtonText}>Continue</Text>
       </TouchableOpacity>
@@ -91,11 +125,19 @@ const styles = StyleSheet.create({
     fontFamily: "TestTiemposHeadline-Medium",
     alignItems: "flex-start",
   },
+  verifyContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 15,
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
   inputText: {
     backgroundColor: "transparent",
     borderWidth: 1.3,
     borderColor: "#000",
-    borderRadius: 25,
+    borderRadius: 8,
     paddingVertical: 15,
     paddingHorizontal: 20,
     marginBottom: 15,
