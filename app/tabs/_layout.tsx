@@ -92,17 +92,26 @@ export default function TabsLayout() {
   return (
     <Tabs>
       <Tabs.Screen
-        name="group/home"
+        name="group"
         options={{
           title: "Group Home",
+          headerShown: false,
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="home/index"
+        options={{
+          title: "Home",
           headerShown: false,
         }}
       />
       <Tabs.Screen
-        name="group"
+        name="reminder/index"
         options={{
-          title: "Group",
+          title: "Reminders",
           headerShown: false,
+          href: null,
         }}
       />
     </Tabs>
