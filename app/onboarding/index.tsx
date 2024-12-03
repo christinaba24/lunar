@@ -82,7 +82,7 @@ export default function OnboardingIndex() {
   const completeOnboarding = async () => {
     try {
       await AsyncStorage.setItem("onboardingComplete", "true");
-      router.replace("/onboarding/complete");
+      router.replace("/onboarding/occupation");
     } catch (error) {
       console.error("Error completing onboarding:", error);
     }
