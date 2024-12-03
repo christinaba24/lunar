@@ -20,20 +20,47 @@ const Reminder = () => {
   };
 
   const formatRecurringDays = (reminder) => {
+    const dayAbbreviations = {
+      sunday: 'Sun',
+      monday: 'Mon',
+      tuesday: 'Tue',
+      wednesday: 'Wed',
+      thursday: 'Thu',
+      friday: 'Fri',
+      saturday: 'Sat',
+    };
+  
     const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-    
     const activeDays = days
-      .filter(day => reminder[day] === true) // Ensure exact matching boolean
-      .map(day => day.charAt(0).toUpperCase() + day.slice(1));
+      .filter(day => reminder[day]) // Check if the day is active (true)
+      .map(day => dayAbbreviations[day]); // Map to the abbreviated form
   
     return activeDays.length ? activeDays.join(', ') : 'No Days Selected';
   };
 
-  const formatTime = (reminder) => {
-    if (reminder.recurring) {
-      return `Every ${formatRecurringDays(reminder)} at ${reminder.time}`;
-    }
-    return `${reminder.date} at ${reminder.time}`;
+  const formatDetails = (reminder) => {
+    // Format Time
+    const formatTo12Hour = (timeString) => {
+      const [hours, minutes] = timeString.split(":").map(Number);
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      const formattedHours = hours % 12 || 12; // Convert to 12-hour format
+      return `${formattedHours}:${minutes < 10 ? '0' + minutes : minutes} ${ampm}`;
+    };
+  
+    // Format Date
+    const formatDate = (dateString) => {
+      const date = new Date(dateString);
+      const options = { year: '2-digit', month: '2-digit', day: '2-digit' };
+      const formattedDate = date.toLocaleDateString('en-US', options); // 10/15/24
+      return formattedDate;
+    };
+  
+    // Format the time for recurring reminders with 12-hour format
+    const formattedTime = reminder.recurring 
+      ? `Every ${formatRecurringDays(reminder)} at ${formatTo12Hour(reminder.time)}`
+      : `${formatDate(reminder.date)} at ${formatTo12Hour(reminder.time)}`;
+  
+    return formattedTime;
   };
 
   return (
@@ -41,7 +68,7 @@ const Reminder = () => {
       {reminders.map((reminder) => (
         <View key={reminder.id} style={styles.reminderBox}>
           <Text style={styles.title}>{reminder.title}</Text>
-          <Text style={styles.time}>{formatTime(reminder)}</Text>
+          <Text style={styles.time}>{formatDetails(reminder)}</Text>
         </View>
       ))}
     </View>
