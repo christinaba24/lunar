@@ -52,7 +52,7 @@ export default function OnboardingLayout() {
     <Stack>
       {/* Main onboarding entry point */}
       <Stack.Screen name="index" options={{ headerShown: false }} />
-      {/* Final onboarding step */}
+      <Stack.Screen name="email" options={{ headerShown: false }} />
       <Stack.Screen name="complete" options={{ headerShown: false }} />
     </Stack>
   );
