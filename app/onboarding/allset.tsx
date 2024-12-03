@@ -25,7 +25,7 @@ export default function AllSetIndex() {
       <Image source={starRight} style={styles.starRight} />
 
       <View style={styles.iconsContainer}>
-        <Image source={twoIcons} style={styles.twoIcons} />
+        <Image source={twoIcons} style={styles.twoicons} />
       </View>
 
       <Text style={styles.headerText}>Congrats, you're all set!</Text>
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#9C9CFF",
-    paddingTop: 70,
+    paddingTop: 40,
     paddingHorizontal: 30,
   },
   backButton: {
@@ -67,13 +67,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     position: "absolute",
     top: 110,
-    paddingHorizontal: 100,
-    paddingVertical: 100,
+    paddingHorizontal: 110,
+    paddingVertical: 80,
   },
-  twoIcons: {
+  twoicons: {
     resizeMode: "contain",
-    marginBottom: 20,
-    overflow: "visible",
+    width: 170,
+    height: 170,
+    marginBottom: 40,
   },
   starBottom: {
     position: "absolute",
