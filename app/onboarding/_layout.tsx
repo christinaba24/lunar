@@ -52,7 +52,11 @@ export default function OnboardingLayout() {
     <Stack>
       {/* Main onboarding entry point */}
       <Stack.Screen name="index" options={{ headerShown: false }} />
-      {/* Final onboarding step */}
+      <Stack.Screen name="occupation" options={{ headerShown: false }} />
+      <Stack.Screen name="location" options={{ headerShown: false }} />
+      <Stack.Screen name="describeYourself" options={{ headerShown: false }} />
+      <Stack.Screen name="joinGroups" options={{ headerShown: false }} />
+      <Stack.Screen name="identity" options={{ headerShown: false }} />
       <Stack.Screen name="complete" options={{ headerShown: false }} />
     </Stack>
   );

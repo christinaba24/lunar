@@ -17,11 +17,11 @@ import ContinueButton from "@/components/ContinueButton";
 import GrayStatusBar from "@/assets/images/OnboardingStatusBarGray.png";
 import PurpleStatusBar from "@/assets/images/OnboardingStatusBarPurple.png";
 
-const OccupationScreen: React.FC = () => {
+const LocationScreen: React.FC = () => {
   const router = useRouter();
 
   const handleContinue = () => {
-    router.push("./location");
+    router.push("./describeYourself");
   };
 
   return (
@@ -33,8 +33,8 @@ const OccupationScreen: React.FC = () => {
             ←
           </Text>
         </TouchableOpacity>
-        <Image source={PurpleStatusBar} />
         <Image source={GrayStatusBar} />
+        <Image source={PurpleStatusBar} />
         <Image source={GrayStatusBar} />
         <Image source={GrayStatusBar} />
         <Image source={GrayStatusBar} />
@@ -43,11 +43,16 @@ const OccupationScreen: React.FC = () => {
         </TouchableOpacity>
       </View>
       <View style={styles.contentContainer}>
-        <Text style={styles.title}>What's your occupation?</Text>
+        <Text style={styles.title}>Where do you live?</Text>
         <Text style={styles.caption}>Why are we asking this? Learn more. </Text>
         <TextInput
           style={[styles.input, { fontFamily: "SF-Pro-Display-Regular" }]}
-          placeholder="Type occupation"
+          placeholder="Type state"
+          placeholderTextColor={Theme.colors.textGray}
+        />
+        <TextInput
+          style={[styles.input, { fontFamily: "SF-Pro-Display-Regular" }]}
+          placeholder="Type city"
           placeholderTextColor={Theme.colors.textGray}
         />
       </View>
@@ -71,7 +76,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 20,
     paddingVertical: 12,
-    top: 60,
+    top: 50,
   },
   headerText: {
     color: Theme.colors.textBlack,
@@ -106,7 +111,7 @@ const styles = StyleSheet.create({
     borderColor: Theme.colors.textGray,
     borderWidth: 1,
     paddingHorizontal: 16,
-    marginBottom: 24,
+    marginBottom: 10,
   },
   waveImage: {
     position: "absolute",
@@ -120,4 +125,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default OccupationScreen;
+export default LocationScreen;
