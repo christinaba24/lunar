@@ -5,7 +5,7 @@ import { View, Text, StyleSheet } from "react-native";
 export default function Home() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Welcome to the Home!</Text>
+      <Text style={styles.text}>Welcome to the Home Screen!</Text>
       <Link href="/tabs/group/home?id=someValue" style={styles.button}>
         <Text style={styles.buttonText}>Go to Group Screen</Text>
       </Link>
