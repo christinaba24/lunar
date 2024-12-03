@@ -48,6 +48,10 @@ export default function Home() {
         title="Go to Onboarding"
         onPress={() => router.push("./onboarding")} // Navigate to onboarding
       />
+      <Button
+        title="Go to Home"
+        onPress={() => router.push("./tabs")} // Navigate to onboarding
+      />
     </View>
   );
 }
