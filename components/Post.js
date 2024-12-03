@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, Image, Modal, TextInput } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -29,6 +29,26 @@ export default function Post({
   const [collections, setCollections] = useState([]);
   const [newCollectionName, setNewCollectionName] = useState("");
   const [isCreatingCollection, setIsCreatingCollection] = useState(false);
+
+  useEffect(() => {
+    checkPinStatus();
+  }, [id]);
+
+  const checkPinStatus = async () => {
+    try {
+      const { data, error } = await db
+        .from("saved_posts")
+        .select("id")
+        .eq("post_id", id)
+        .eq("user_id", CURRENT_USER_ID)
+        .limit(1);
+
+      if (error) throw error;
+      setIsPinned(data && data.length > 0);
+    } catch (err) {
+      console.error("Error checking pin status:", err);
+    }
+  };
 
   const submitVote = async (newVote) => {
     if (!onVote) return;
