@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 20,
     paddingVertical: 12,
-    top: 60,
+    top: 50,
   },
   headerText: {
     color: Theme.colors.textBlack,
@@ -89,6 +89,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: Theme.colors.PurpleMedium,
     marginBottom: 8,
+    marginLeft: 10,
     fontFamily: "TestTiemposHeadline-Medium",
   },
   caption: {
@@ -96,7 +97,7 @@ const styles = StyleSheet.create({
     color: Theme.colors.textGray,
     fontFamily: "SF-Pro-Display-Regular",
     marginBottom: 24,
-    marginLeft: 5,
+    marginLeft: 15,
   },
   input: {
     width: "100%",

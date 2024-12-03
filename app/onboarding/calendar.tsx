@@ -2,31 +2,30 @@ import React from "react";
 import {
   View,
   Text,
-  TextInput,
-  StatusBar,
   StyleSheet,
   Image,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
 import { Stack, useRouter } from "expo-router";
 
 import Theme from "@/assets/theme";
-import wave from "@/assets/images/OnboardingPurpleWave.png";
-import BackIcon from "@/assets/icons/back button.png";
 import ContinueButton from "@/components/ContinueButton";
 import GrayStatusBar from "@/assets/images/OnboardingStatusBarGray.png";
 import PurpleStatusBar from "@/assets/images/OnboardingStatusBarPurple.png";
+import calendars from "@/assets/images/calendars.png";
 
-const LocationScreen: React.FC = () => {
+const { width } = Dimensions.get("window");
+
+const CalendarScreen: React.FC = () => {
   const router = useRouter();
 
   const handleContinue = () => {
-    router.push("./describeYourself");
+    router.push("./calendarDone");
   };
 
   return (
     <View style={styles.container}>
-      <Image source={wave} style={styles.waveImage} />
       <View style={styles.header}>
         <TouchableOpacity>
           <Text style={styles.backText} onPress={() => router.back()}>
@@ -34,31 +33,23 @@ const LocationScreen: React.FC = () => {
           </Text>
         </TouchableOpacity>
         <Image source={GrayStatusBar} />
+        <Image source={GrayStatusBar} />
+        <Image source={GrayStatusBar} />
+        <Image source={GrayStatusBar} />
         <Image source={PurpleStatusBar} />
-        <Image source={GrayStatusBar} />
-        <Image source={GrayStatusBar} />
-        <Image source={GrayStatusBar} />
         <TouchableOpacity onPress={handleContinue}>
           <Text style={styles.headerText}>Skip</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.contentContainer}>
-        <Text style={styles.title}>Where do you live?</Text>
-        <Text style={styles.caption}>Why are we asking this? Learn more. </Text>
-        <TextInput
-          style={[styles.input, { fontFamily: "SF-Pro-Display-Regular" }]}
-          placeholder="Type state"
-          placeholderTextColor={Theme.colors.textGray}
-        />
-        <TextInput
-          style={[styles.input, { fontFamily: "SF-Pro-Display-Regular" }]}
-          placeholder="Type city"
-          placeholderTextColor={Theme.colors.textGray}
-        />
+        <Text style={styles.title}>
+          Sync to your calendar for seamless reminders integration
+        </Text>
+        <Image source={calendars} style={styles.image} />
       </View>
       <ContinueButton
-        buttonColor={Theme.colors.White} // Custom color for the button
-        textColor={Theme.colors.PurpleMedium} // Custom color for the text
+        buttonColor={Theme.colors.PurpleMedium} // Custom color for the button
+        textColor={Theme.colors.White} // Custom color for the text
         onPress={handleContinue} // Pass the function to handle button press
       />
     </View>
@@ -85,24 +76,19 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    paddingTop: 240,
+    paddingTop: 200,
     alignItems: "flex-start",
     paddingHorizontal: 24,
   },
   title: {
     fontSize: 20,
     fontWeight: "bold",
+    alignSelf: "center",
     color: Theme.colors.PurpleMedium,
-    marginBottom: 8,
-    marginLeft: 10,
+    marginBottom: 15,
+    paddingHorizontal: 15,
     fontFamily: "TestTiemposHeadline-Medium",
-  },
-  caption: {
-    fontSize: Theme.sizes.caption,
-    color: Theme.colors.textGray,
-    fontFamily: "SF-Pro-Display-Regular",
-    marginBottom: 24,
-    marginLeft: 15,
+    textAlign: "center",
   },
   input: {
     width: "100%",
@@ -124,6 +110,12 @@ const styles = StyleSheet.create({
     fontSize: 25,
     color: "#000s",
   },
+  image: {
+    width: width * 0.65,
+    height: width * 0.65 * (3 / 4),
+    resizeMode: "contain",
+    alignSelf: "center",
+  },
 });
 
-export default LocationScreen;
+export default CalendarScreen;

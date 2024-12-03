@@ -62,6 +62,8 @@ export default function OnboardingLayout() {
       <Stack.Screen name="describeYourself" options={{ headerShown: false }} />
       <Stack.Screen name="joinGroups" options={{ headerShown: false }} />
       <Stack.Screen name="identity" options={{ headerShown: false }} />
+      <Stack.Screen name="calendar" options={{ headerShown: false }} />
+      <Stack.Screen name="calendarDone" options={{ headerShown: false }} />
     </Stack>
   );
 }

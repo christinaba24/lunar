@@ -2,25 +2,26 @@ import React from "react";
 import {
   View,
   Text,
-  TextInput,
-  StatusBar,
   StyleSheet,
   Image,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
 import { Stack, useRouter } from "expo-router";
 
 import Theme from "@/assets/theme";
-import wave from "@/assets/images/OnboardingPurpleWave.png";
 import ContinueButton from "@/components/ContinueButton";
 import GrayStatusBar from "@/assets/images/OnboardingStatusBarGray.png";
 import PurpleStatusBar from "@/assets/images/OnboardingStatusBarPurple.png";
+import verifications from "@/assets/images/verifications.png";
+
+const { width } = Dimensions.get("window");
 
 const IdentityScreen: React.FC = () => {
   const router = useRouter();
 
   const handleContinue = () => {
-    router.push("./describeYourself");
+    router.push("./calendar");
   };
 
   return (
@@ -41,15 +42,16 @@ const IdentityScreen: React.FC = () => {
         </TouchableOpacity>
       </View>
       <View style={styles.contentContainer}>
-        <Text style={styles.title}>Verify your ide</Text>
+        <Text style={styles.title}>Verify your Identity</Text>
         <Text style={styles.caption}>
           To get verified, input your work email address or upload a letter of
           employment
         </Text>
+        <Image source={verifications} style={styles.image} />
       </View>
       <ContinueButton
-        buttonColor={Theme.colors.White} // Custom color for the button
-        textColor={Theme.colors.PurpleMedium} // Custom color for the text
+        buttonColor={Theme.colors.PurpleMedium} // Custom color for the button
+        textColor={Theme.colors.White} // Custom color for the text
         onPress={handleContinue} // Pass the function to handle button press
       />
     </View>
@@ -76,24 +78,26 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    paddingTop: 240,
+    paddingTop: 180,
     alignItems: "flex-start",
     paddingHorizontal: 24,
   },
   title: {
     fontSize: 20,
     fontWeight: "bold",
+    alignSelf: "center",
     color: Theme.colors.PurpleMedium,
-    marginBottom: 8,
+    marginBottom: 10,
     fontFamily: "TestTiemposHeadline-Medium",
   },
   caption: {
-    fontSize: Theme.sizes.caption,
+    fontSize: 15,
     color: Theme.colors.textGray,
     fontFamily: "SF-Pro-Display-Regular",
     marginBottom: 24,
     marginLeft: 5,
     alignSelf: "center",
+    textAlign: "center",
   },
   input: {
     width: "100%",
@@ -114,6 +118,12 @@ const styles = StyleSheet.create({
   backText: {
     fontSize: 25,
     color: "#000s",
+  },
+  image: {
+    width: width * 0.8,
+    height: width * 0.8 * (3 / 4),
+    resizeMode: "contain",
+    alignSelf: "center",
   },
 });
 
