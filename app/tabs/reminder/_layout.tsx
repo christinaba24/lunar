@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { View, ScrollView, Text, StyleSheet, StatusBar, SafeAreaView, TouchableOpacity } from "react-native";
+import { View, Modal, ScrollView, Text, StyleSheet, StatusBar, SafeAreaView, TouchableOpacity } from "react-native";
 import { Stack } from "expo-router";
 import Reminder from "@/components/Reminder";
+import NewReminder from "@/components/NewReminder";
 import Theme from "@/assets/theme";
 import db from "@/database/db";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -25,6 +26,7 @@ interface Reminder {
 export default function Layout() {
   const [recurringReminders, setRecurringReminders] = useState<Reminder[]>([]);
   const [otherReminders, setOtherReminders] = useState<Reminder[]>([]);
+  const [isNewReminderVisible, setIsNewReminderVisible] = useState(false);
 
   useEffect(() => {
     fetchReminders();
@@ -51,7 +53,7 @@ export default function Layout() {
         <View style={styles.headerContainer}>
             <Text style={styles.header}>My Reminders</Text>
             <View style={styles.iconContainer}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => setIsNewReminderVisible(true)}>
                 <MaterialCommunityIcons 
                     name="plus-circle-outline" 
                     size={27} 
@@ -89,6 +91,21 @@ export default function Layout() {
             </>
           )}
       </ScrollView>
+
+      <Modal
+        visible={isNewReminderVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setIsNewReminderVisible(false)}
+      >
+        <NewReminder 
+          onClose={() => setIsNewReminderVisible(false)}
+          onSave={() => {
+            setIsNewReminderVisible(false);
+            fetchReminders(); // Refresh reminders after saving
+          }}
+        />
+      </Modal>
     </SafeAreaView>
   );
 }

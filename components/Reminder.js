@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-
 const Reminder = ({ reminder }) => {
   // Early return if reminder is undefined
   if (!reminder) {
