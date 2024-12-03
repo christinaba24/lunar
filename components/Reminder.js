@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import db from "@/database/db";
+import { MaterialCommunityIcons } from '@expo/vector-icons'; // Importing the icons
 
 const Reminder = () => {
   const [reminders, setReminders] = useState([]);
@@ -63,12 +64,50 @@ const Reminder = () => {
     return formattedTime;
   };
 
+  const getTypeColor = (type) => {
+    const colors = {
+      Wellbeing: '#98c7cb',  // Green
+      'Food and Cooking': '#f7da67', // Orange
+      Family: '#9c9cff', // Blue
+      Sleep: '#57b3ff', // Purple
+    };
+    return colors[type] || '#9E9E9E'; // Default color if type is not found
+  };
+
+  const getTypeIcon = (type) => {
+    const icons = {
+      Wellbeing: 'heart',
+      'Food and Cooking': 'silverware-fork-knife',
+      Family: 'account-group',
+      Sleep: 'bed',
+    };
+    return icons[type] || 'help-circle'; // Default icon if type is not found
+  };
+
   return (
     <View style={styles.container}>
       {reminders.map((reminder) => (
         <View key={reminder.id} style={styles.reminderBox}>
-          <Text style={styles.title}>{reminder.title}</Text>
-          <Text style={styles.time}>{formatDetails(reminder)}</Text>
+          <View 
+            style={[styles.iconContainer, { backgroundColor: getTypeColor(reminder.type) }]}
+          >
+            <MaterialCommunityIcons 
+              name={getTypeIcon(reminder.type)} 
+              size={17} 
+              color="white" 
+            />
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.title}>{reminder.title}</Text>
+            <Text style={styles.time}>{formatDetails(reminder)}</Text>
+          </View>
+          <TouchableOpacity>
+            <MaterialCommunityIcons 
+              name="dots-horizontal" 
+              size={24} 
+              color="#A2A2A2" 
+            />
+          </TouchableOpacity>
         </View>
       ))}
     </View>
@@ -81,23 +120,31 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   reminderBox: {
-    backgroundColor: '#f9f9f9',
-    padding: 15,
-    marginBottom: 10,
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 1 },
-    shadowRadius: 3,
-    elevation: 3,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingRight: 15,
+    marginBottom: 35,
+    flexDirection: 'row',
+  },
+  iconContainer: {
+    width: 50,
+    height: 50,
+    borderRadius: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 15,
+  },
+  textContainer: {
+    flex: 1,
+    justifyContent: 'center',
   },
   title: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '600',
     marginBottom: 5,
   },
   time: {
-    fontSize: 14,
+    fontSize: 12,
     color: '#555',
   },
 });
