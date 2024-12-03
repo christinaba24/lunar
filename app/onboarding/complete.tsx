@@ -39,10 +39,23 @@
 
 import React from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRouter } from "expo-router";
 
 export default function CompleteOnboarding() {
-  const finishOnboarding = () => {
-    console.log("Onboarding Completed!"); // Final logic here
+  const router = useRouter();
+
+  const finishOnboarding = async () => {
+    try {
+      // Save the onboarding completion status
+      await AsyncStorage.setItem("onboardingComplete", "true");
+
+      console.log("Onboarding Completed!");
+      // Navigate to the home page
+      router.replace("../tabs/home");
+    } catch (error) {
+      console.error("Error completing onboarding:", error);
+    }
   };
 
   return (
@@ -58,9 +71,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#f8f8f8",
   },
   text: {
     fontSize: 24,
     marginBottom: 20,
+    fontWeight: "bold",
   },
 });

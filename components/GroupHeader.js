@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
   },
   groupMembers: {
     fontSize: 12,
-    color: "#888",
+    color: "#000000",
     marginVertical: 5,
     paddingBottom: 5,
   },
