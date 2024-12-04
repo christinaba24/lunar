@@ -1,14 +1,22 @@
 import { Link } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Image, TextInput, FlatList } from "react-native";
+import { useRouter } from "expo-router";
+import { View, Text, StyleSheet, Image, TextInput, FlatList, TouchableOpacity } from "react-native";
 import db from "@/database/db";
 import Theme from "@/assets/theme";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import GroupCard from "@/components/GroupCard";
 import homeTopImage from "../../../assets/images/hometop.png";
-import mom from "../../../assets/images/moms.png";
-import paloAlto from "../../../assets/images/paloalto.png";
-import nurses from "../../../assets/images/nurses.png";
+import momMain from "../../../assets/images/moms.png";
+import momBack from "../../../assets/images/paloalto.png";
+import nursesMain from "../../../assets/images/nurses.png";
+import nursesBack from "../../../assets/images/hospital.png";
+import lgbtqMain from "../../../assets/images/lgbtq.png";
+import lgbtqBack from "../../../assets/images/pride.png";
+import gymMain from "../../../assets/images/gymmain.png";
+import gymBack from "../../../assets/images/gymback.png";
+import partMain from "../../../assets/images/clock.png";
+import partBack from "../../../assets/images/parttime.png";
 
 import Feed from "@/components/Feed";
 
@@ -17,6 +25,7 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState("top");
 
   const CURRENT_USER_ID = "6bb59990-4f6b-4fd0-b475-64353b7e2abd";
+  const router = useRouter();
 
   // Fetch the username when the component mounts
   useEffect(() => {
@@ -46,11 +55,11 @@ export default function Home() {
 
   // Example data for group cards
   const groups = [
-    { id: "1", title: "Palo Alto Moms", members: 50, mainPhoto: mom, backgroundPhoto: paloAlto },
-    { id: "2", title: "Night Nurses", members: 82, mainPhoto: nurses, backgroundPhoto: nurses },
-    { id: "3", title: "Study Group 3", members: 15, mainPhoto: null, backgroundPhoto: null },
-    { id: "4", title: "Study Group 4", members: 12, mainPhoto: null, backgroundPhoto: null },
-    { id: "5", title: "Study Group 5", members: 6, mainPhoto: null, backgroundPhoto: null }
+    { id: "1", title: "Palo Alto Moms", members: 50, mainPhoto: momMain, backgroundPhoto: momBack },
+    { id: "2", title: "Night Nurses", members: 82, mainPhoto: nursesMain, backgroundPhoto: nursesBack },
+    { id: "3", title: "Gym Rats", members: 143, mainPhoto: gymMain, backgroundPhoto: gymBack },
+    { id: "4", title: "LGBTQ+", members: 541, mainPhoto: lgbtqMain, backgroundPhoto: lgbtqBack },
+    { id: "5", title: "Part-Time", members: 96, mainPhoto: partMain, backgroundPhoto: partBack }
   ];
 
   return (
@@ -91,9 +100,9 @@ export default function Home() {
             contentContainerStyle={styles.scrollContainer}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item: group }) => (
-              <Link
-                href={`/tabs/group/home?id=${group.id}`}
+              <TouchableOpacity
                 style={styles.cardWrapper}
+                onPress={() => router.push(`/tabs/group/home?id=${group.id}`)}
               >
                 <GroupCard
                   title={group.title}
@@ -101,7 +110,7 @@ export default function Home() {
                   mainPhoto={group.mainPhoto}
                   backgroundPhoto={group.backgroundPhoto}
                 />
-              </Link>
+              </TouchableOpacity>
             )}
           />
         </>
@@ -138,6 +147,7 @@ const styles = StyleSheet.create({
     color: "#4747BA",
     fontWeight: "bold",
     fontFamily: "TestTiemposHeadline-Medium",
+
   },
   statement: {
     fontSize: 13,
@@ -150,12 +160,14 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontFamily: "TestTiemposHeadline-Medium",
     paddingBottom: 0,
+    paddingTop: 0,
   },
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
     marginTop: 10,
     marginHorizontal: 17,
+    marginBottom: 18,
   },
   searchBox: {
     flex: 1,

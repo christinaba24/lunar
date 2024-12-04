@@ -26,7 +26,7 @@ const GroupCard = ({ title, members, mainPhoto, backgroundPhoto }) => {
 const styles = StyleSheet.create({
   card: {
     width: "100%",
-    height: 250, // Adjust height to fit both images and text
+    height: 210, // Adjust height to fit both images and text
     borderRadius: 8,
     overflow: "hidden",
     backgroundColor: "#fff",
@@ -36,6 +36,8 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
+    borderWidth: 0.4,
+    borderColor: "#b8b8b8"
   },
   backgroundImage: {
     width: "100%",
@@ -43,12 +45,13 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
     position: "absolute", // Position it above everything else
     top: 0,
+    opacity: 0.7,
   },
   mainImage: {
     position: "absolute",
     top: "40%", // Move it up so it's centered with 40% of the height
     left: "50%",
-    transform: [{ translateX: -40 }, { translateY: -40 }],
+    transform: [{ translateX: -40 }, { translateY: -25 }],
     width: 80,
     height: 80,
     borderRadius: 10,
@@ -59,18 +62,14 @@ const styles = StyleSheet.create({
   detailsContainer: {
     position: "absolute",
     bottom: 10, // Position it towards the bottom of the card
-    left: 15,
-    right: 15,
-    backgroundColor: "#fff", // White background for the text container
+    left: 5,
+    right: 5,
     padding: 10,
-    borderRadius: 10, // Rounded corners for the text box
-    shadowColor: "#000", // Add shadow for a slight depth effect
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
+    borderRadius: 10,
+    alignItems: "center",
   },
   title: {
-    fontSize: 18,
+    fontSize: 15,
     fontWeight: "bold",
     color: "#333",
   },
