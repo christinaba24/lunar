@@ -1,6 +1,6 @@
 import { Link } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Image, TextInput, ScrollView } from "react-native";
+import { View, Text, StyleSheet, Image, TextInput, FlatList } from "react-native";
 import db from "@/database/db";
 import Theme from "@/assets/theme";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -27,12 +27,12 @@ export default function Home() {
           .select("*")
           .eq("id", CURRENT_USER_ID)
           .single();
-  
+
         if (error) {
           console.error("Error fetching username: ", error);
           return;
         }
-  
+
         if (data) {
           setUsername(data.username);
         }
@@ -54,62 +54,72 @@ export default function Home() {
   ];
 
   return (
-    <ScrollView style={styles.container}>
-      <Image source={homeTopImage} style={styles.image} />
-      <View style={styles.textContainer}>
-        <Text style={styles.header}>Hello, {username || "User"}!</Text>
-        <Text style={styles.statement}>Closer connections, no matter the hour.</Text>
-      </View>
-      
-      {/* Search Box */}
-      <View style={styles.searchContainer}>
-        <TextInput 
-          style={styles.searchBox} 
-          placeholder="Search" 
-          placeholderTextColor="#888" 
-        />
-        <MaterialCommunityIcons 
-          name="magnify" 
-          size={18} 
-          color="white" 
-          style={styles.searchIcon} 
-        />
-      </View>
-      <Text style={styles.subHeader}>My Groups</Text>
-      {/* Horizontal Scroll View for Group Cards */}
-      <ScrollView 
-        horizontal 
-        contentContainerStyle={styles.scrollContainer} 
-        showsHorizontalScrollIndicator={false}
-      >
-        {groups.map((group) => (
-          <Link 
-            key={group.id} 
-            href={`/tabs/group/home?id=${group.id}`} 
-            style={styles.cardWrapper} // Wrapper style for spacing
-          >
-            <GroupCard
-              title={group.title}
-              members={group.members}
-              mainPhoto={group.mainPhoto}
-              backgroundPhoto={group.backgroundPhoto}
+    <FlatList
+      style={{backgroundColor: Theme.colors.White}}
+      data={groups}
+      keyExtractor={(item) => item.id.toString()}
+      ListHeaderComponent={(
+        <>
+          <Image source={homeTopImage} style={styles.image} />
+          <View style={styles.textContainer}>
+            <Text style={styles.header}>Hello, {username || "User"}!</Text>
+            <Text style={styles.statement}>Closer connections, no matter the hour.</Text>
+          </View>
+
+          {/* Search Box */}
+          <View style={styles.searchContainer}>
+            <TextInput
+              style={styles.searchBox}
+              placeholder="Search"
+              placeholderTextColor="#888"
             />
-          </Link>
-        ))}
-      </ScrollView>
-      <Text style={styles.subHeader}>Trending Posts</Text>
-      <View style={styles.postContainer}>
-        <Feed shouldNavigateToComments={true} topPosts={activeTab === "top"} />
-      </View>
-    </ScrollView>
+            <MaterialCommunityIcons
+              name="magnify"
+              size={18}
+              color="white"
+              style={styles.searchIcon}
+            />
+          </View>
+
+          <Text style={styles.subHeader}>My Groups</Text>
+
+          {/* Horizontal Scroll View for Group Cards */}
+          <FlatList
+            data={groups}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.scrollContainer}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item: group }) => (
+              <Link
+                href={`/tabs/group/home?id=${group.id}`}
+                style={styles.cardWrapper}
+              >
+                <GroupCard
+                  title={group.title}
+                  members={group.members}
+                  mainPhoto={group.mainPhoto}
+                  backgroundPhoto={group.backgroundPhoto}
+                />
+              </Link>
+            )}
+          />
+        </>
+      )}
+      ListFooterComponent={(
+        <>
+          <Text style={styles.subHeader}>Trending Posts</Text>
+          <View style={styles.postContainer}>
+            <Feed shouldNavigateToComments={true} topPosts={activeTab === "top"} />
+          </View>
+        </>
+      )}
+      renderItem={null}
+    />
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f8f8f8",
-  },
   image: {
     position: "absolute",
     top: 0,
@@ -140,15 +150,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontFamily: "TestTiemposHeadline-Medium",
     paddingBottom: 0,
-  },
-  button: {
-    padding: 10,
-    backgroundColor: "#007bff",
-    borderRadius: 5,
-    marginTop: 20,
-  },
-  buttonText: {
-    color: "#fff",
   },
   searchContainer: {
     flexDirection: "row",
@@ -182,10 +183,8 @@ const styles = StyleSheet.create({
     width: 160,
   },
   postContainer: {
-    flex: 1,
     width: "100%",
-    justifyContent: "center",
-    padding: 8,
-    paddingTop: 5,
+    padding: 20,
+    paddingTop: 15,
   },
 });

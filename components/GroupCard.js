@@ -5,17 +5,14 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 const GroupCard = ({ title, members, mainPhoto, backgroundPhoto }) => {
   return (
     <View style={styles.card}>
-      {/* Top half with background image and purple overlay */}
-      <View style={styles.topHalf}>
-        <Image source={backgroundPhoto} style={styles.backgroundImage} />
-        <View style={styles.overlay} />
-      </View>
+      {/* Background image covering the top 50% of the card */}
+      <Image source={backgroundPhoto} style={styles.backgroundImage} />
 
-      {/* Main photo spanning across background and bottom half */}
+      {/* Main photo centered in the middle of the card, in front of the background */}
       <Image source={mainPhoto} style={styles.mainImage} />
 
-      {/* Bottom half with group title and members */}
-      <View style={styles.bottomHalf}>
+      {/* Group title and members info */}
+      <View style={styles.detailsContainer}>
         <Text style={styles.title}>{title}</Text>
         <View style={styles.membersContainer}>
           <MaterialCommunityIcons name="account-group" size={20} color="#444" />
@@ -28,48 +25,49 @@ const GroupCard = ({ title, members, mainPhoto, backgroundPhoto }) => {
 
 const styles = StyleSheet.create({
   card: {
-    width: "100%", // Use full width of the wrapper (controlled via cardWrapper)
-  height: 180,   // Reduce the height for a shorter card
-  borderRadius: 20,
-  overflow: "hidden",
-  backgroundColor: "#fff",
-  marginBottom: 20,
-  },
-  topHalf: {
-    height: "50%", // Proportional height for background
     width: "100%",
+    height: 250, // Adjust height to fit both images and text
+    borderRadius: 8,
+    overflow: "hidden",
+    backgroundColor: "#fff",
+    marginBottom: 20,
+    position: "relative",
+    shadowColor: "#000", // Add shadow for a slight depth effect
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
   },
   backgroundImage: {
     width: "100%",
-    height: "100%",
+    height: "50%", // The background image covers the top half
     resizeMode: "cover",
-  },
-  overlay: {
-    position: "absolute",
+    position: "absolute", // Position it above everything else
     top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(74, 0, 124, 0.5)", // Purple overlay with low opacity
   },
   mainImage: {
     position: "absolute",
-    top: "40%", // Adjust position relative to card size
+    top: "40%", // Move it up so it's centered with 40% of the height
     left: "50%",
     transform: [{ translateX: -40 }, { translateY: -40 }],
     width: 80,
     height: 80,
-    borderRadius: 40,
+    borderRadius: 10,
     borderWidth: 4,
     borderColor: "#fff",
+    zIndex: 2, // Ensure the main photo is on top of the background image
   },
-  bottomHalf: {
-    backgroundColor: "#fff",
-    padding: 15,
-    justifyContent: "center",
-    alignItems: "center",
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
+  detailsContainer: {
+    position: "absolute",
+    bottom: 10, // Position it towards the bottom of the card
+    left: 15,
+    right: 15,
+    backgroundColor: "#fff", // White background for the text container
+    padding: 10,
+    borderRadius: 10, // Rounded corners for the text box
+    shadowColor: "#000", // Add shadow for a slight depth effect
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
   },
   title: {
     fontSize: 18,
@@ -79,7 +77,7 @@ const styles = StyleSheet.create({
   membersContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 10,
+    marginTop: 5,
   },
   membersText: {
     fontSize: 14,
