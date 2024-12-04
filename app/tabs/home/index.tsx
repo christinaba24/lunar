@@ -1,13 +1,20 @@
 import { Link } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Image, TextInput } from "react-native";
+import { View, Text, StyleSheet, Image, TextInput, ScrollView } from "react-native";
 import db from "@/database/db";
-import homeTopImage from "../../../assets/images/hometop.png";
 import Theme from "@/assets/theme";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import GroupCard from "@/components/GroupCard";
+import homeTopImage from "../../../assets/images/hometop.png";
+import mom from "../../../assets/images/moms.png";
+import paloAlto from "../../../assets/images/paloalto.png";
+import nurses from "../../../assets/images/nurses.png";
+
+import Feed from "@/components/Feed";
 
 export default function Home() {
   const [username, setUsername] = useState("");
+  const [activeTab, setActiveTab] = useState("top");
 
   const CURRENT_USER_ID = "6bb59990-4f6b-4fd0-b475-64353b7e2abd";
 
@@ -37,12 +44,21 @@ export default function Home() {
     fetchUsername();
   }, []);
 
+  // Example data for group cards
+  const groups = [
+    { id: "1", title: "Palo Alto Moms", members: 50, mainPhoto: mom, backgroundPhoto: paloAlto },
+    { id: "2", title: "Night Nurses", members: 82, mainPhoto: nurses, backgroundPhoto: nurses },
+    { id: "3", title: "Study Group 3", members: 15, mainPhoto: null, backgroundPhoto: null },
+    { id: "4", title: "Study Group 4", members: 12, mainPhoto: null, backgroundPhoto: null },
+    { id: "5", title: "Study Group 5", members: 6, mainPhoto: null, backgroundPhoto: null }
+  ];
+
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Image source={homeTopImage} style={styles.image} />
       <View style={styles.textContainer}>
-        <Text style={styles.header}>Hello, {username || "Jane"}!</Text>
-        <Text style={styles.subHeader}>Closer connections, no matter the hour.</Text>
+        <Text style={styles.header}>Hello, {username || "User"}!</Text>
+        <Text style={styles.statement}>Closer connections, no matter the hour.</Text>
       </View>
       
       {/* Search Box */}
@@ -59,11 +75,33 @@ export default function Home() {
           style={styles.searchIcon} 
         />
       </View>
-      
-      <Link href="/tabs/group/home?id=someValue" style={styles.button}>
-        <Text style={styles.buttonText}>Go to Group Screen</Text>
-      </Link>
-    </View>
+      <Text style={styles.subHeader}>My Groups</Text>
+      {/* Horizontal Scroll View for Group Cards */}
+      <ScrollView 
+        horizontal 
+        contentContainerStyle={styles.scrollContainer} 
+        showsHorizontalScrollIndicator={false}
+      >
+        {groups.map((group) => (
+          <Link 
+            key={group.id} 
+            href={`/tabs/group/home?id=${group.id}`} 
+            style={styles.cardWrapper} // Wrapper style for spacing
+          >
+            <GroupCard
+              title={group.title}
+              members={group.members}
+              mainPhoto={group.mainPhoto}
+              backgroundPhoto={group.backgroundPhoto}
+            />
+          </Link>
+        ))}
+      </ScrollView>
+      <Text style={styles.subHeader}>Trending Posts</Text>
+      <View style={styles.postContainer}>
+        <Feed shouldNavigateToComments={true} topPosts={activeTab === "top"} />
+      </View>
+    </ScrollView>
   );
 }
 
@@ -91,10 +129,17 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontFamily: "TestTiemposHeadline-Medium",
   },
-  subHeader: {
+  statement: {
     fontSize: 13,
     color: "#444",
     marginTop: 5,
+  },
+  subHeader: {
+    fontSize: 15,
+    padding: 20,
+    fontWeight: "600",
+    fontFamily: "TestTiemposHeadline-Medium",
+    paddingBottom: 0,
   },
   button: {
     padding: 10,
@@ -109,7 +154,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginTop: 10,
-    marginHorizontal: 20,
+    marginHorizontal: 17,
   },
   searchBox: {
     flex: 1,
@@ -125,5 +170,22 @@ const styles = StyleSheet.create({
     backgroundColor: Theme.colors.PurpleMedium,
     borderRadius: 20,
     padding: 5,
+  },
+  scrollContainer: {
+    flexDirection: "row",
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 17,
+  },
+  cardWrapper: {
+    marginRight: 7,
+    width: 160,
+  },
+  postContainer: {
+    flex: 1,
+    width: "100%",
+    justifyContent: "center",
+    padding: 8,
+    paddingTop: 5,
   },
 });
