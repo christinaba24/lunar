@@ -178,15 +178,13 @@ export default function Post({
             <Text style={styles.timestamp}>{timestamp}</Text>
           </View>
         </View>
-        <View style={styles.pinContainer}>
-          <FontAwesome
-            name="ellipsis-h"
-            size={15}
-            color="#8E8E8E"
-            style={{ marginRight: 6 }}
-          />
-          <PinButton isPinned={isPinned} onPress={handlePinPress} />
-        </View>
+        <FontAwesome
+          name="ellipsis-h"
+          size={12}
+          color="#8E8E8E"
+          style={{ marginRight: 2, marginTop: 3 }}
+        />
+        <PinButton isPinned={isPinned} onPress={handlePinPress} />
       </View>
       <View style={styles.body}>
         <Text style={styles.text}>{text}</Text>
