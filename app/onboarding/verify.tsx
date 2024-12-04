@@ -25,7 +25,7 @@ export default function VerifyIndex() {
       <Image source={starRight} style={styles.starRight} />
 
       <View style={styles.iconsContainer}>
-        <Image source={twoIcons} style={styles.twoIcons} />
+        <Image source={twoIcons} style={styles.twoicons} />
       </View>
 
       <Text style={styles.headerText}>Verify email</Text>
@@ -100,13 +100,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     position: "absolute",
     top: 110,
-    paddingHorizontal: 100,
-    paddingVertical: 100,
+    paddingHorizontal: 110,
+    paddingVertical: 80,
   },
-  twoIcons: {
+  twoicons: {
     resizeMode: "contain",
-    marginBottom: 20,
-    overflow: "visible",
+    width: 170,
+    height: 170,
+    marginBottom: 40,
   },
   starBottom: {
     position: "absolute",

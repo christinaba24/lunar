@@ -1,96 +1,25 @@
-// import { Tabs, useSegments } from "expo-router";
-// import FontAwesome from "@expo/vector-icons/FontAwesome";
-// import { useEffect, useState } from "react";
-// import Theme from "@/assets/theme"; // Use your custom theme if available
-
-// export default function Layout() {
-//   //   const segments = useSegments();
-//   //   const [currentTab, setCurrentTab] = useState("feed");
-
-//   // Update the active tab dynamically based on the route
-//   //   useEffect(() => {
-//   //     if (segments[0] === "profile" || segments[1] === "details") {
-//   //       setCurrentTab("profile");
-//   //     } else if (segments[0] === "feed") {
-//   //       setCurrentTab("feed");
-//   //     }
-//   //   }, [segments]);
-
-//   // return (
-//   //   <Tabs
-//   //   //   screenOptions={({ route }) => ({
-//   //   //     tabBarStyle: {
-//   //   //       backgroundColor: Theme.colors.backgroundPrimary || "#1c1c1e", // Dark background
-//   //   //       borderTopWidth: 0, // Remove top border for a cleaner look
-//   //   //     },
-//   //   //     tabBarActiveTintColor: Theme.colors.iconHighlighted || "#ffa500", // Orange for active icons
-//   //   //     tabBarInactiveTintColor: Theme.colors.textSecondary || "#ffffff", // White for inactive icons
-//   //   //     tabBarLabelStyle: {
-//   //   //       fontSize: 12, // Adjust text size
-//   //   //     },
-//   //   //     tabBarIconStyle: {
-//   //   //       marginBottom: -4, // Adjust icon spacing
-//   //   //     },
-//   //   //     tabBarIcon: ({ size, color }) => {
-//   //   //       let iconName;
-//   //   //       if (route.name === "feed") {
-//   //   //         iconName = "home";
-//   //   //       } else if (route.name === "profile") {
-//   //   //         iconName = "user";
-//   //   //       }
-//   //   //       return <FontAwesome size={size} name={iconName} color={color} />;
-//   //   //     },
-//   //   //   })}
-//   //   >
-//   //     <Tabs.Screen
-//   //       name="/group/home"
-//   //       options={{
-//   //         title: "Home",
-//   //         headerShown: false,
-//   //       }}
-//   //     />
-//   //     <Tabs.Screen
-//   //       name="group"
-//   //       options={{
-//   //         title: "Home",
-//   //         headerShown: false,
-//   //       }}
-//   //     />
-//   //     <Tabs.Screen
-//   //       name="home"
-//   //       options={{
-//   //         title: "Home",
-//   //         headerShown: false,
-//   //       }} // is this supposed to be here
-//   //     />
-//   //   </Tabs>
-//   // );
-//   return (
-//     <Tabs>
-//       <Tabs.Screen
-//         name="/group/home"
-//         options={{
-//           title: "Home",
-//           headerShown: false,
-//         }}
-//       />
-//       <Tabs.Screen
-//         name="group"
-//         options={{
-//           title: "Group",
-//           headerShown: false,
-//         }}
-//       />
-//     </Tabs>
-//   );
-// }
+import FontAwesome5 from "@expo/vector-icons/FontAwesome";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 import React from "react";
 import { Tabs } from "expo-router";
+import theme from "@/assets/theme";
 
 export default function TabsLayout() {
   return (
-    <Tabs>
+    <Tabs
+      screenOptions={{
+        tabBarActiveTintColor: theme.colors.PurpleMedium,
+        tabBarInactiveTintColor: "gray",
+        tabBarStyle: {
+          backgroundColor: theme.colors.White,
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontFamily: "SF-Pro-Display-Light",
+        },
+      }}
+    >
       <Tabs.Screen
         name="group"
         options={{
@@ -104,6 +33,33 @@ export default function TabsLayout() {
         options={{
           title: "Home",
           headerShown: false,
+          tabBarIcon: ({ color }) => (
+            <FontAwesome5 name="home" color={color} size={25} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="explore/index"
+        options={{
+          title: "Explore",
+          headerShown: false,
+          tabBarIcon: ({ color }) => (
+            <FontAwesome5 name="compass" color={color} size={25} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="tabs/pins"
+        options={{
+          title: "Pins",
+          headerShown: false,
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons
+              size={20}
+              name={"pin-outline"}
+              color={color}
+            />
+          ),
         }}
       />
       <Tabs.Screen
@@ -111,7 +67,27 @@ export default function TabsLayout() {
         options={{
           title: "Reminders",
           headerShown: false,
-          href: null,
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons
+              name="bell-outline"
+              color={color}
+              size={25}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="profile/index"
+        options={{
+          title: "Profile",
+          headerShown: false,
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons
+              name="account-outline"
+              color={color}
+              size={25}
+            />
+          ),
         }}
       />
     </Tabs>
