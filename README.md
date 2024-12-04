@@ -1,6 +1,4 @@
-# CS 147: Introduction to Human-Computer Interaction
-
-Autumn 2024
+# CS 147 Autumn 2024
 
 ## Lunar
 
