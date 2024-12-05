@@ -35,6 +35,7 @@ export default function ReminderScreen() {
   const [recurringReminders, setRecurringReminders] = useState<Reminder[]>([]);
   const [otherReminders, setOtherReminders] = useState<Reminder[]>([]);
   const [isNewReminderVisible, setIsNewReminderVisible] = useState(false);
+  const [isCalendarSyncModalVisible, setIsCalendarSyncModalVisible] = useState(false); // New state for calendar sync modal
 
   useEffect(() => {
     fetchReminders();
@@ -53,6 +54,12 @@ export default function ReminderScreen() {
     }
   };
 
+  const handleSyncWithCalendar = (sync: boolean) => {
+    // Implement calendar sync logic here
+    console.log(sync ? "Syncing with calendar..." : "Not syncing with calendar.");
+    setIsCalendarSyncModalVisible(false); // Close modal after choice
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" backgroundColor={Theme.colors.White} />
@@ -68,7 +75,7 @@ export default function ReminderScreen() {
                 style={styles.icon}
               />
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => setIsCalendarSyncModalVisible(true)}>
               <MaterialCommunityIcons
                 name="calendar-month-outline"
                 size={27}
@@ -100,6 +107,7 @@ export default function ReminderScreen() {
         )}
       </ScrollView>
 
+      {/* Modal for new reminder */}
       <Modal
         visible={isNewReminderVisible}
         transparent={true}
@@ -113,6 +121,34 @@ export default function ReminderScreen() {
             fetchReminders(); // Refresh reminders after saving
           }}
         />
+      </Modal>
+
+      {/* Calendar Sync Modal */}
+      <Modal
+        visible={isCalendarSyncModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setIsCalendarSyncModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>Would you like to sync with the calendar?</Text>
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={styles.modalButton}
+                onPress={() => handleSyncWithCalendar(true)}
+              >
+                <Text style={styles.modalButtonText}>Yes</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.modalButton}
+                onPress={() => handleSyncWithCalendar(false)}
+              >
+                <Text style={styles.modalButtonText}>No</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
       </Modal>
     </SafeAreaView>
   );
@@ -148,5 +184,36 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginLeft: 15,
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Dimmed background
+  },
+  modalContent: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  modalText: {
+    fontSize: 18,
+    marginBottom: 20,
+  },
+  modalButtons: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%",
+  },
+  modalButton: {
+    backgroundColor: Theme.colors.PurpleDark,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  modalButtonText: {
+    color: "white",
+    fontSize: 16,
   },
 });
