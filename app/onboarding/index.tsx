@@ -66,6 +66,7 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     marginBottom: 20,
     overflow: "visible",
+    height: 120,
   },
   iconsContainer: {
     alignItems: "center",

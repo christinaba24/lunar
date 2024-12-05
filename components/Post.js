@@ -200,6 +200,12 @@ export default function Post({
             <Text style={styles.timestamp}>{timestamp}</Text>
           </View>
         </View>
+        <FontAwesome
+          name="ellipsis-h"
+          size={12}
+          color="#8E8E8E"
+          style={{ marginRight: 2, marginTop: 3 }}
+        />
         <PinButton isPinned={isPinned} onPress={handlePinPress} />
       </View>
       <View style={styles.body}>
@@ -398,6 +404,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     flex: 3,
+  },
+  pinContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    flex: 1,
   },
   comment: {
     flexDirection: "row",

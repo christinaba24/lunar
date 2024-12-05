@@ -8,7 +8,7 @@ import {
   TextInput,
 } from "react-native";
 import { useRouter } from "expo-router";
-import twoIcons from "@/assets/icons/twoicons.png";
+import twoicons from "@/assets/icons/twoicons.png";
 import starBottom from "@/assets/icons/starbottom.png";
 import starRight from "@/assets/icons/starright.png";
 
@@ -25,7 +25,7 @@ export default function PasswordIndex() {
       <Image source={starRight} style={styles.starRight} />
 
       <View style={styles.iconsContainer}>
-        <Image source={twoIcons} style={styles.twoIcons} />
+        <Image source={twoicons} style={styles.twoIcons} />
       </View>
 
       <Text style={styles.headerText}>Create password</Text>
@@ -66,14 +66,29 @@ const styles = StyleSheet.create({
     alignItems: "center",
     position: "absolute",
     top: 110,
-    paddingHorizontal: 100,
-    paddingVertical: 100,
+    paddingHorizontal: 110,
+    paddingVertical: 80,
   },
   twoIcons: {
     resizeMode: "contain",
-    marginBottom: 20,
-    overflow: "visible",
+    width: 170, // Explicit dimensions for better rendering
+    height: 170,
+    marginBottom: 40,
   },
+
+  // twoIcons: {
+  //   resizeMode: "contain",
+  //   marginBottom: 20,
+  //   overflow: "visible",
+  //   height: 120,
+  // },
+  // iconsContainer: {
+  //   alignItems: "center",
+  //   position: "absolute",
+  //   top: 110,
+  //   paddingHorizontal: 100,
+  //   paddingVertical: 100,
+  // },
   starBottom: {
     position: "absolute",
     bottom: 0,

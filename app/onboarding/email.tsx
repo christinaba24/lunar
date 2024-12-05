@@ -8,7 +8,7 @@ import {
   TextInput,
 } from "react-native";
 import { useRouter } from "expo-router";
-import twoIcons from "@/assets/icons/twoicons.png";
+import twoicons from "@/assets/icons/twoicons.png";
 import starBottom from "@/assets/icons/starbottom.png";
 import starRight from "@/assets/icons/starright.png";
 
@@ -25,7 +25,7 @@ export default function EmailIndex() {
       <Image source={starRight} style={styles.starRight} />
 
       <View style={styles.iconsContainer}>
-        <Image source={twoIcons} style={styles.twoIcons} />
+        <Image source={twoicons} style={styles.twoicons} />
       </View>
 
       <Text style={styles.headerText}>Enter email</Text>
@@ -66,13 +66,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     position: "absolute",
     top: 110,
-    paddingHorizontal: 100,
-    paddingVertical: 100,
+    paddingHorizontal: 110,
+    paddingVertical: 80,
   },
-  twoIcons: {
+  twoicons: {
     resizeMode: "contain",
-    marginBottom: 20,
-    overflow: "visible",
+    width: 170,
+    height: 170,
+    marginBottom: 40,
   },
   starBottom: {
     position: "absolute",
