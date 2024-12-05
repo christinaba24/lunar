@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
     transform: [{ translateY: -12 }],
   },
   repeatSection: {
-    marginBottom: 20,
+    marginBottom: 8,
   },
   repeatText: {
     fontSize: 16,
@@ -354,7 +354,7 @@ const styles = StyleSheet.create({
   },
   pickerText: {
     fontSize: 16,
-    color: '#333',
+    color: '#595959',
   },
   modalOverlay: {
     flex: 1,
@@ -368,6 +368,10 @@ const styles = StyleSheet.create({
     elevation: 5,
     width: '60%', // Adjust width as needed
     bottom: '42%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
   },
   okButton: {
     marginTop: 10,
