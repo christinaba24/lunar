@@ -9,15 +9,7 @@ import Theme from "@/assets/theme";
 const NewReminder = ({ title: initialTitle = '', onClose, onSave }) => {
   const [title, setTitle] = useState(initialTitle);
   const [repeat, setRepeat] = useState(false);
-  const [selectedDays, setSelectedDays] = useState({
-    sunday: false,
-    monday: false,
-    tuesday: false,
-    wednesday: false,
-    thursday: false,
-    friday: false,
-    saturday: false,
-  });
+  const [selectedDays, setSelectedDays] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
   const [reminderType, setReminderType] = useState(null);
@@ -35,15 +27,27 @@ const NewReminder = ({ title: initialTitle = '', onClose, onSave }) => {
   const handleSave = async () => {
     if (title.trim()) {
       try {
-        const { data, error } = await db.from('reminders').insert([{
+        // Extract the hours and minutes from the selectedTime
+        const formattedTime = new Date(selectedTime).toISOString().split('T')[1].split('.')[0]; // Format as HH:MM:SS
+  
+        // Prepare the data based on selectedDays booleans
+        const reminderData = {
           title,
           recurring: repeat, // Change 'repeat' to 'recurring'
-          selectedDays,
+          sunday: selectedDays.includes('Sunday'),
+          monday: selectedDays.includes('Monday'),
+          tuesday: selectedDays.includes('Tuesday'),
+          wednesday: selectedDays.includes('Wednesday'),
+          thursday: selectedDays.includes('Thursday'),
+          friday: selectedDays.includes('Friday'),
+          saturday: selectedDays.includes('Saturday'),
           date: selectedDate,
-          time: selectedTime,
+          time: formattedTime, // Insert formatted time
           type: reminderType
-        }]);
+        };
   
+        const { data, error } = await db.from('reminders').insert([reminderData]);
+    
         if (error) {
           console.error('Error saving reminder:', error);
         } else {
@@ -58,10 +62,9 @@ const NewReminder = ({ title: initialTitle = '', onClose, onSave }) => {
   };
 
   const toggleDaySelection = (day) => {
-    setSelectedDays((prev) => ({
-      ...prev,
-      [day]: !prev[day],
-    }));
+    setSelectedDays((prevDays) =>
+      prevDays.includes(day) ? prevDays.filter((d) => d !== day) : [...prevDays, day]
+    );
   };
 
   const togglePickerVisibility = () => {
