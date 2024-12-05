@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Modal, Switch } from 'react-native';
+import { Button, View, Text, StyleSheet, TouchableOpacity, TextInput, Modal, Switch } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker'; // Use Picker from @react-native-picker/picker
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import db from "@/database/db"; // Assuming db is correctly configured for your database
 import Theme from "@/assets/theme";
 
@@ -14,10 +15,12 @@ const NewReminder = ({ onClose, onSave }) => {
   const [reminderType, setReminderType] = useState(null);
   const [pickerVisible, setPickerVisible] = useState(false);
   const [tempReminderType, setTempReminderType] = useState(reminderType);
+  const [datePickerVisible, setDatePickerVisible] = useState(false);
+  const [timePickerVisible, setTimePickerVisible] = useState(false);
 
   const handleSave = async () => {
     if (title.trim()) {
-      const { error } = await db.from('reminders').insert([{ title, repeat, selectedDays, selectedDate, selectedTime, reminderType }]);
+      const { error } = await db.from('reminders').insert([{ title, repeat, selectedDays, selectedDate, selectedTime, type: reminderType }]);
       if (!error) {
         onSave(); // Call onSave if the save was successful
       } else {
@@ -41,6 +44,32 @@ const NewReminder = ({ onClose, onSave }) => {
 
   const handlePickerChange = (itemValue) => {
     setReminderType(itemValue);
+  };
+
+  const showDatePicker = () => {
+    setDatePickerVisible(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisible(false);
+  };
+
+  const handleDateConfirm = (date) => {
+    setSelectedDate(date);
+    hideDatePicker();
+  };
+
+  const showTimePicker = () => {
+    setTimePickerVisible(true);
+  };
+
+  const hideTimePicker = () => {
+    setTimePickerVisible(false);
+  };
+
+  const handleTimeConfirm = (time) => {
+    setSelectedTime(time);
+    hideTimePicker();
   };
 
   return (
@@ -103,24 +132,37 @@ const NewReminder = ({ onClose, onSave }) => {
 
         {/* Date and Time Selection */}
         <View style={styles.dateTimeContainer}>
-          <View style={styles.dateContainer}>
-            <Text style={styles.dateText}>Date</Text>
-            <TouchableOpacity
-              disabled={repeat}
-              onPress={() => setPickerVisible(true)} // Toggle picker visibility
-            >
-              <Text style={styles.dateText}>{selectedDate ? selectedDate : 'Select Date'}</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.timeContainer}>
-            <Text style={styles.timeText}>Time</Text>
-            <TextInput
-              style={styles.timeText}
-              value={selectedTime}
-              placeholder="Select Time"
-              onChangeText={setSelectedTime}
-            />
-          </View>
+          <TouchableOpacity onPress={showDatePicker} disabled={repeat}>
+            <View style={styles.dateBox}>
+              <MaterialCommunityIcons 
+                name="calendar" 
+                size={20} 
+                color={repeat ? "#D3D3D3" : "#828282"} 
+                style={styles.calendarIcon} 
+              />
+              <TextInput
+                color={repeat ? "#D3D3D3" : "#595959"} 
+                value={selectedDate ? selectedDate.toLocaleDateString() : 'Select Date'}
+                editable={!repeat} // Disable editing if repeat toggle is on
+              />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={showTimePicker}>
+            <View style={styles.dateBox}>
+              <MaterialCommunityIcons 
+                name="clock" 
+                size={20} 
+                color="#828282" 
+                style={styles.calendarIcon} 
+              />
+              <TextInput
+                style={styles.dateInput}
+                value={selectedTime ? selectedTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Select Time'}
+                editable={false}
+                onPress={showTimePicker}
+              />
+            </View>
+          </TouchableOpacity>
         </View>
 
         {/* Reminder Type Section */}
@@ -160,6 +202,24 @@ const NewReminder = ({ onClose, onSave }) => {
             </Modal>
             )}
       </View>
+
+      {/* Date Picker Modal */}
+      <DateTimePickerModal
+        date={selectedDate ? selectedDate : new Date()}
+        isVisible={datePickerVisible}
+        mode="date"
+        onConfirm={handleDateConfirm}
+        onCancel={hideDatePicker}
+      />
+
+      {/* Time Picker Modal */}
+      <DateTimePickerModal
+        date={selectedTime ? selectedTime : new Date()}
+        isVisible={timePickerVisible}
+        mode="time"
+        onConfirm={handleTimeConfirm}
+        onCancel={hideTimePicker}
+      />
     </View>
   );
 };
@@ -208,6 +268,9 @@ const styles = StyleSheet.create({
     padding: 0,
     marginRight: 10,
   },
+  calendarIcon: {
+    marginRight: 8,
+  },
   locationIcon: {
     position: 'absolute',
     right: 0,
@@ -222,10 +285,26 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'black',
   },
-  daysContainer: {
+  dateBox: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginTop: 10,
+    alignItems: 'center',
+    backgroundColor: '#f0f0f0',
+    padding: 10,
+    borderRadius: 5,
+    width: 152,
+  },
+  dateInput: {
+    color: "#595959",
+  },
+  dateTimeContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center', // Make sure they align vertically
+    width: '100%', // Ensure it takes up full width
+  },
+  dateText: {
+    fontSize: 14,
+    color: '#333',
   },
   day: {
     fontSize: 14,
@@ -234,11 +313,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
     borderRadius: 5,
   },
+  daysContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
   selectedDay: {
     fontSize: 14,
     padding: 5,
     margin: 5,
-    backgroundColor: '#007bff',
+    backgroundColor: Theme.colors.PurpleDark,
     color: 'white',
     borderRadius: 5,
   },
@@ -247,23 +330,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 10,
-  },
-  dateTimeContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  dateContainer: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  timeContainer: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  dateText: {
-    fontSize: 14,
-    color: '#333',
   },
   pickerWrapper: {
     marginTop: 20,

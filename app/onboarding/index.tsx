@@ -38,7 +38,7 @@ export default function OnboardingIndex() {
 
       <TouchableOpacity
         style={styles.signinButton}
-        onPress={() => router.push("/")}
+        onPress={() => router.push("./tabs/home")}
       >
         <Text style={styles.signinButtonText}>Sign in</Text>
       </TouchableOpacity>
