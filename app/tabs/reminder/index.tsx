@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   View,
   Modal,
@@ -8,12 +8,16 @@ import {
   StatusBar,
   SafeAreaView,
   TouchableOpacity,
+  Animated,
+  Easing,
+  Image,
 } from "react-native";
 import Reminder from "@/components/Reminder";
 import NewReminder from "@/components/NewReminder";
 import Theme from "@/assets/theme";
 import db from "@/database/db";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import calendarSync from "../../../assets/images/calendarsync.png";
 
 interface Reminder {
   id: number;
@@ -35,7 +39,8 @@ export default function ReminderScreen() {
   const [recurringReminders, setRecurringReminders] = useState<Reminder[]>([]);
   const [otherReminders, setOtherReminders] = useState<Reminder[]>([]);
   const [isNewReminderVisible, setIsNewReminderVisible] = useState(false);
-  const [isCalendarSyncModalVisible, setIsCalendarSyncModalVisible] = useState(false); // New state for calendar sync modal
+  const [isCalendarOverlayVisible, setIsCalendarOverlayVisible] = useState(false);
+  const translateY = useRef(new Animated.Value(500)).current; // Start off-screen
 
   useEffect(() => {
     fetchReminders();
@@ -46,7 +51,6 @@ export default function ReminderScreen() {
     if (error) {
       console.error("Error fetching reminders:", error);
     } else {
-      // Filter reminders into Recurring and Other
       const recurring = data.filter((reminder) => reminder.recurring);
       const other = data.filter((reminder) => !reminder.recurring);
       setRecurringReminders(recurring);
@@ -54,10 +58,25 @@ export default function ReminderScreen() {
     }
   };
 
-  const handleSyncWithCalendar = (sync: boolean) => {
-    // Implement calendar sync logic here
-    console.log(sync ? "Syncing with calendar..." : "Not syncing with calendar.");
-    setIsCalendarSyncModalVisible(false); // Close modal after choice
+  const showCalendarOverlay = () => {
+    setIsCalendarOverlayVisible(true);
+    Animated.timing(translateY, {
+      toValue: 0, // Fully visible
+      duration: 500,
+      easing: Easing.out(Easing.ease),
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const hideCalendarOverlay = () => {
+    Animated.timing(translateY, {
+      toValue: 500, // Slide down to hide
+      duration: 300,
+      easing: Easing.in(Easing.ease),
+      useNativeDriver: true,
+    }).start(() => {
+      setIsCalendarOverlayVisible(false);
+    });
   };
 
   return (
@@ -75,7 +94,7 @@ export default function ReminderScreen() {
                 style={styles.icon}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => setIsCalendarSyncModalVisible(true)}>
+            <TouchableOpacity onPress={showCalendarOverlay}>
               <MaterialCommunityIcons
                 name="calendar-month-outline"
                 size={27}
@@ -107,7 +126,6 @@ export default function ReminderScreen() {
         )}
       </ScrollView>
 
-      {/* Modal for new reminder */}
       <Modal
         visible={isNewReminderVisible}
         transparent={true}
@@ -118,38 +136,23 @@ export default function ReminderScreen() {
           onClose={() => setIsNewReminderVisible(false)}
           onSave={() => {
             setIsNewReminderVisible(false);
-            fetchReminders(); // Refresh reminders after saving
+            fetchReminders();
           }}
         />
       </Modal>
 
-      {/* Calendar Sync Modal */}
-      <Modal
-        visible={isCalendarSyncModalVisible}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => setIsCalendarSyncModalVisible(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalText}>Would you like to sync with the calendar?</Text>
-            <View style={styles.modalButtons}>
-              <TouchableOpacity
-                style={styles.modalButton}
-                onPress={() => handleSyncWithCalendar(true)}
-              >
-                <Text style={styles.modalButtonText}>Yes</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.modalButton}
-                onPress={() => handleSyncWithCalendar(false)}
-              >
-                <Text style={styles.modalButtonText}>No</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
+      {/* Calendar Sync Overlay */}
+      {isCalendarOverlayVisible && (
+        <Modal transparent={true} animationType="none">
+        <TouchableOpacity style={styles.overlay}>
+          <Animated.View style={[styles.animatedContainer, { transform: [{ translateY }] },]}>
+            <TouchableOpacity onPress={hideCalendarOverlay}>
+              <Image source={calendarSync} style={styles.calendarImage} />
+            </TouchableOpacity>
+          </Animated.View>
+        </TouchableOpacity>
       </Modal>
+      )}
     </SafeAreaView>
   );
 }
@@ -185,35 +188,26 @@ const styles = StyleSheet.create({
   icon: {
     marginLeft: 15,
   },
-  modalOverlay: {
+  overlay: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Dimmed background
+    justifyContent: "flex-end",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
-  modalContent: {
-    backgroundColor: "white",
-    padding: 20,
-    borderRadius: 10,
-    alignItems: "center",
-  },
-  modalText: {
-    fontSize: 18,
-    marginBottom: 20,
-  },
-  modalButtons: {
-    flexDirection: "row",
-    justifyContent: "space-around",
+  animatedContainer: {
+    position: "absolute",
+    bottom: 0,
     width: "100%",
   },
-  modalButton: {
-    backgroundColor: Theme.colors.PurpleDark,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
+  calendarImage: {
+    flex: 1,
+    justifyContent: "flex-end",
+    width: 393,
+    height: 860,
+    resizeMode: "contain",
   },
-  modalButtonText: {
-    color: "white",
+  overlayText: {
+    marginTop: 20,
     fontSize: 16,
+    color: "#333",
   },
 });

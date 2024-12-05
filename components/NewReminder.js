@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Modal, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Modal, Switch } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker'; // Use Picker from @react-native-picker/picker
 import db from "@/database/db"; // Assuming db is correctly configured for your database
+import Theme from "@/assets/theme";
 
 const NewReminder = ({ onClose, onSave }) => {
   const [title, setTitle] = useState('');
@@ -79,9 +80,16 @@ const NewReminder = ({ onClose, onSave }) => {
 
         {/* Repeat Section */}
         <View style={styles.repeatSection}>
-          <TouchableOpacity onPress={() => setRepeat(!repeat)}>
-            <Text style={styles.repeatText}>{repeat ? 'Disable Repeat' : 'Enable Repeat'}</Text>
-          </TouchableOpacity>
+          <View style={styles.toggleContainer}>
+            <Text style={styles.repeatText}>Repeat</Text>
+            <Switch
+              value={repeat}
+              onValueChange={(value) => setRepeat(value)}
+              thumbColor={repeat ? "#ffffff" : "#f4f3f4"}
+              trackColor={{ false: "#767577", true: Theme.colors.PurpleMedium }}
+              style={{ transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] }} 
+            />
+          </View>
           {repeat && (
             <View style={styles.daysContainer}>
               {['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].map((day) => (
@@ -128,11 +136,11 @@ const NewReminder = ({ onClose, onSave }) => {
                 onPress={() => setPickerVisible(false)}
             />
             <View style={styles.pickerPopup}>
-                <Picker
-                selectedValue={reminderType}
-                onValueChange={(itemValue) => setTempReminderType(itemValue)}
-                itemStyle={{fontSize: 15}}
-                >
+            <Picker
+              selectedValue={tempReminderType} // Use tempReminderType here
+              onValueChange={(itemValue) => setTempReminderType(itemValue)} // Update tempReminderType as the user scrolls
+              itemStyle={{ fontSize: 15 }}
+            >
                 <Picker.Item label="Select Type" value="" />
                 <Picker.Item label="Wellbeing" value="Wellbeing" />
                 <Picker.Item label="Food and Cooking" value="Food and Cooking" />
@@ -233,6 +241,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#007bff',
     color: 'white',
     borderRadius: 5,
+  },
+  toggleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
   },
   dateTimeContainer: {
     flexDirection: 'row',
