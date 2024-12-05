@@ -397,7 +397,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     flexDirection: "row",
-    width: "25%",
+    width: "30%",
     justifyContent: "space-between",
   },
   scoreContainer: {

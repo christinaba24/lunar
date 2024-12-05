@@ -49,7 +49,7 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="tabs/pins"
+        name="pins"
         options={{
           title: "Pins",
           headerShown: false,

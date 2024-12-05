@@ -26,7 +26,7 @@ export default function GroupFeed({
       setIsLoading(true);
       setError(null);
 
-      let query = db
+      let query = await db
         .from("posts_with_counts")
         .select("*")
         .order("timestamp", { ascending: false });
@@ -167,6 +167,7 @@ export default function GroupFeed({
 const styles = StyleSheet.create({
   postsContainer: {
     width: "100%",
+    gap: 10,
   },
   posts: {
     gap: 10,
