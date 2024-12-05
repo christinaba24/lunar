@@ -30,9 +30,15 @@ export default function PasswordIndex() {
 
       <Text style={styles.headerText}>Create password</Text>
 
-      <TextInput style={styles.inputText}>
+      {/* <TextInput style={styles.inputText}>
         <Text style={styles.inputText}>Minimum 8 characters</Text>
-      </TextInput>
+      </TextInput> */}
+
+      <TextInput
+        style={styles.inputText}
+        placeholder="Minimum 8 characters"
+        placeholderTextColor="#2C2C2C"
+      />
 
       <TouchableOpacity
         style={styles.continueButton}
@@ -75,20 +81,6 @@ const styles = StyleSheet.create({
     height: 170,
     marginBottom: 40,
   },
-
-  // twoIcons: {
-  //   resizeMode: "contain",
-  //   marginBottom: 20,
-  //   overflow: "visible",
-  //   height: 120,
-  // },
-  // iconsContainer: {
-  //   alignItems: "center",
-  //   position: "absolute",
-  //   top: 110,
-  //   paddingHorizontal: 100,
-  //   paddingVertical: 100,
-  // },
   starBottom: {
     position: "absolute",
     bottom: 0,
