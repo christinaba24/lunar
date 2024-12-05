@@ -6,26 +6,27 @@ import Post from "@/components/Post";
 import Loading from "@/components/Loading";
 import timeAgo from "@/utils/timeAgo";
 
-export default function PinPostsFeed({ userId }) {
+export default function CollectionPostsFeed({ userId, collectionId }) {
   const [posts, setPosts] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchSavedPosts();
-  }, [userId]);
+    fetchCollectionPosts();
+  }, [userId, collectionId]);
 
-  const fetchSavedPosts = async () => {
+  const fetchCollectionPosts = async () => {
     try {
       setIsLoading(true);
       setError(null);
 
-      // Get all saved posts with their timestamps, ordered by most recent pins first
+      // Get saved posts for this specific collection, ordered by most recent pins first
       const { data: savedPosts, error: savedPostsError } = await db
         .from("saved_posts")
         .select("post_id, timestamp")
         .eq("user_id", userId)
+        .eq("collection_id", collectionId)
         .order("timestamp", { ascending: false });
 
       if (savedPostsError) throw savedPostsError;
@@ -35,7 +36,7 @@ export default function PinPostsFeed({ userId }) {
         return;
       }
 
-      const postIds = savedPosts.map((post) => post.post_id);
+      const postIds = savedPosts.map(post => post.post_id);
 
       // Fetch full post data for saved posts
       const { data: postsData, error: postsError } = await db
@@ -56,18 +57,18 @@ export default function PinPostsFeed({ userId }) {
 
       // Create maps for votes and pin timestamps
       const votesMap = Object.fromEntries(
-        votesData.map((vote) => [vote.post_id, vote.vote])
+        votesData.map(vote => [vote.post_id, vote.vote])
       );
       const pinTimestampMap = Object.fromEntries(
-        savedPosts.map((post) => [post.post_id, post.timestamp])
+        savedPosts.map(post => [post.post_id, post.timestamp])
       );
 
       // Combine post data with votes and sort by pin timestamp
       const postsWithVotes = postsData
-        .map((post) => ({
+        .map(post => ({
           ...post,
           vote: votesMap[post.id] || 0,
-          pinTimestamp: pinTimestampMap[post.id],
+          pinTimestamp: pinTimestampMap[post.id]
         }))
         .sort((a, b) => {
           // Sort by pin timestamp (most recent first)
@@ -76,7 +77,7 @@ export default function PinPostsFeed({ userId }) {
 
       setPosts(postsWithVotes);
     } catch (err) {
-      console.error("Error fetching saved posts:", err);
+      console.error("Error fetching collection posts:", err);
       setError(err.message);
     } finally {
       setIsLoading(false);
@@ -86,14 +87,14 @@ export default function PinPostsFeed({ userId }) {
 
   const handleVote = async (postId, newVote) => {
     try {
-      setPosts((currentPosts) =>
-        currentPosts.map((post) => {
+      setPosts(currentPosts =>
+        currentPosts.map(post => {
           if (post.id === postId) {
             const voteChange = newVote - (post.vote || 0);
             return {
               ...post,
               vote: newVote,
-              like_count: post.like_count + voteChange,
+              like_count: post.like_count + voteChange
             };
           }
           return post;
@@ -107,15 +108,17 @@ export default function PinPostsFeed({ userId }) {
           .eq("post_id", postId)
           .eq("user_id", userId);
       } else {
-        await db.from("likes").upsert({
-          post_id: postId,
-          user_id: userId,
-          vote: newVote,
-        });
+        await db
+          .from("likes")
+          .upsert({
+            post_id: postId,
+            user_id: userId,
+            vote: newVote
+          });
       }
     } catch (err) {
       console.error("Error updating vote:", err);
-      fetchSavedPosts(); // Refresh on error
+      fetchCollectionPosts(); // Refresh on error
     }
   };
 
@@ -151,13 +154,13 @@ export default function PinPostsFeed({ userId }) {
           refreshing={isRefreshing}
           onRefresh={() => {
             setIsRefreshing(true);
-            fetchSavedPosts();
+            fetchCollectionPosts();
           }}
           tintColor={Theme.colors.textPrimary}
         />
       }
       ListEmptyComponent={
-        <Text style={styles.emptyText}>No saved posts yet</Text>
+        <Text style={styles.emptyText}>No posts in this collection yet</Text>
       }
     />
   );
@@ -165,20 +168,20 @@ export default function PinPostsFeed({ userId }) {
 
 const styles = StyleSheet.create({
   postsContainer: {
-    width: "100%",
+    width: "100%"
   },
   posts: {
     gap: 10,
-    padding: 10,
+    padding: 10
   },
   errorText: {
     color: "red",
     padding: 20,
-    textAlign: "center",
+    textAlign: "center"
   },
   emptyText: {
     textAlign: "center",
     padding: 20,
-    color: Theme.colors.textSecondary,
-  },
+    color: Theme.colors.textSecondary
+  }
 });
