@@ -195,20 +195,20 @@ const styles = StyleSheet.create({
     color: Theme.colors.textBlack,
     fontFamily: "TestTiemposHeadline-Medium",
   },
-  listContainer: {
-    padding: 16,
-  },
   columnWrapper: {
     justifyContent: "space-between",
     marginBottom: 16,
+    paddingHorizontal: 16,
+    marginTop: 14,
   },
   collectionItem: {
     width: 181,
+    marginRight: 3,
   },
   imageContainer: {
-    width: 181,
+    width: 177,
     height: 128,
-    borderRadius: 20,
+    borderRadius: 15,
     overflow: "hidden",
     marginBottom: 8,
   },

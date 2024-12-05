@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, View, Text, StyleSheet, TouchableOpacity, TextInput, Modal, Switch } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, TextInput, Modal, Switch } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker'; // Use Picker from @react-native-picker/picker
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -7,9 +7,17 @@ import db from "@/database/db"; // Assuming db is correctly configured for your 
 import Theme from "@/assets/theme";
 
 const NewReminder = ({ title: initialTitle = '', onClose, onSave }) => {
-  const [title, setTitle] = useState(initialTitle); // Set title to passed title or empty string
+  const [title, setTitle] = useState(initialTitle);
   const [repeat, setRepeat] = useState(false);
-  const [selectedDays, setSelectedDays] = useState([]);
+  const [selectedDays, setSelectedDays] = useState({
+    sunday: false,
+    monday: false,
+    tuesday: false,
+    wednesday: false,
+    thursday: false,
+    friday: false,
+    saturday: false,
+  });
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
   const [reminderType, setReminderType] = useState(null);
@@ -26,11 +34,23 @@ const NewReminder = ({ title: initialTitle = '', onClose, onSave }) => {
 
   const handleSave = async () => {
     if (title.trim()) {
-      const { error } = await db.from('reminders').insert([{ title, repeat, selectedDays, selectedDate, selectedTime, type: reminderType }]);
-      if (!error) {
-        onSave(); // Call onSave if the save was successful
-      } else {
-        console.error('Error saving reminder:', error);
+      try {
+        const { data, error } = await db.from('reminders').insert([{
+          title,
+          recurring: repeat, // Change 'repeat' to 'recurring'
+          selectedDays,
+          date: selectedDate,
+          time: selectedTime,
+          type: reminderType
+        }]);
+  
+        if (error) {
+          console.error('Error saving reminder:', error);
+        } else {
+          onSave(); // Call onSave if the save was successful
+        }
+      } catch (err) {
+        console.error('Error while inserting reminder:', err);
       }
     } else {
       console.warn('Title cannot be empty');
@@ -38,9 +58,10 @@ const NewReminder = ({ title: initialTitle = '', onClose, onSave }) => {
   };
 
   const toggleDaySelection = (day) => {
-    setSelectedDays((prevDays) =>
-      prevDays.includes(day) ? prevDays.filter((d) => d !== day) : [...prevDays, day]
-    );
+    setSelectedDays((prev) => ({
+      ...prev,
+      [day]: !prev[day],
+    }));
   };
 
   const togglePickerVisibility = () => {
@@ -202,12 +223,30 @@ const NewReminder = ({ title: initialTitle = '', onClose, onSave }) => {
                     }}
                     style={styles.okButton}
                     >
-                <Text style={styles.okText}>OK</Text>
+                    <Text style={styles.okButtonText}>OK</Text>
                 </TouchableOpacity>
             </View>
             </Modal>
-        )}
+            )}
       </View>
+
+      {/* Date Picker Modal */}
+      <DateTimePickerModal
+        date={selectedDate ? selectedDate : new Date()}
+        isVisible={datePickerVisible}
+        mode="date"
+        onConfirm={handleDateConfirm}
+        onCancel={hideDatePicker}
+      />
+
+      {/* Time Picker Modal */}
+      <DateTimePickerModal
+        date={selectedTime ? selectedTime : new Date()}
+        isVisible={timePickerVisible}
+        mode="time"
+        onConfirm={handleTimeConfirm}
+        onCancel={hideTimePicker}
+      />
     </View>
   );
 };
