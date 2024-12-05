@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, View, Text, StyleSheet, TouchableOpacity, TextInput, Modal, Switch } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker'; // Use Picker from @react-native-picker/picker
@@ -6,8 +6,8 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import db from "@/database/db"; // Assuming db is correctly configured for your database
 import Theme from "@/assets/theme";
 
-const NewReminder = ({ onClose, onSave }) => {
-  const [title, setTitle] = useState('');
+const NewReminder = ({ title: initialTitle = '', onClose, onSave }) => {
+  const [title, setTitle] = useState(initialTitle); // Set title to passed title or empty string
   const [repeat, setRepeat] = useState(false);
   const [selectedDays, setSelectedDays] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
@@ -17,6 +17,12 @@ const NewReminder = ({ onClose, onSave }) => {
   const [tempReminderType, setTempReminderType] = useState(reminderType);
   const [datePickerVisible, setDatePickerVisible] = useState(false);
   const [timePickerVisible, setTimePickerVisible] = useState(false);
+
+  useEffect(() => {
+    if (initialTitle) {
+      setTitle(initialTitle); // If there's a title prop, set it as the initial value
+    }
+  }, [initialTitle]);
 
   const handleSave = async () => {
     if (title.trim()) {
@@ -90,7 +96,7 @@ const NewReminder = ({ onClose, onSave }) => {
           <TextInput
             value={title}
             onChangeText={setTitle}
-            placeholder="Enter reminder title"
+            placeholder={initialTitle ? "" : "Enter Title"}
             style={styles.input}
           />
           <MaterialCommunityIcons
@@ -196,30 +202,12 @@ const NewReminder = ({ onClose, onSave }) => {
                     }}
                     style={styles.okButton}
                     >
-                    <Text style={styles.okButtonText}>OK</Text>
+                <Text style={styles.okText}>OK</Text>
                 </TouchableOpacity>
             </View>
             </Modal>
-            )}
+        )}
       </View>
-
-      {/* Date Picker Modal */}
-      <DateTimePickerModal
-        date={selectedDate ? selectedDate : new Date()}
-        isVisible={datePickerVisible}
-        mode="date"
-        onConfirm={handleDateConfirm}
-        onCancel={hideDatePicker}
-      />
-
-      {/* Time Picker Modal */}
-      <DateTimePickerModal
-        date={selectedTime ? selectedTime : new Date()}
-        isVisible={timePickerVisible}
-        mode="time"
-        onConfirm={handleTimeConfirm}
-        onCancel={hideTimePicker}
-      />
     </View>
   );
 };
