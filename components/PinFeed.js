@@ -1,23 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   FlatList,
   StyleSheet,
-  Dimensions,
-  TouchableOpacity
-} from 'react-native';
-import db from '@/database/db';
-import Loading from './Loading';
-import Theme from '@/assets/theme';
-
-const SCREEN_WIDTH = Dimensions.get('window').width;
-const COLUMN_WIDTH = (SCREEN_WIDTH - 48) / 2;
+  Image,
+  TouchableOpacity,
+} from "react-native";
+import db from "@/database/db";
+import Loading from "./Loading";
+import health from "@/assets/images/health.png";
+import cooking from "@/assets/images/cooking.png";
+import family from "@/assets/images/family.png";
+import store from "@/assets/images/store.png";
+import sleep from "@/assets/images/sleep.png";
+import Theme from "@/assets/theme";
 
 export default function PinFeed({ userId }) {
   const [collections, setCollections] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null); 
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     console.log("PinFeed mounted with userId:", userId);
@@ -30,9 +32,9 @@ export default function PinFeed({ userId }) {
     try {
       setIsLoading(true);
       setErrorMessage(null);
-      
+
       console.log("Fetching collections for user:", userId);
-      
+
       const { data: collectionsData, error: collectionsError } = await db
         .from("collections")
         .select("*")
@@ -49,14 +51,16 @@ export default function PinFeed({ userId }) {
       if (collectionsData && collectionsData.length > 0) {
         const { data, error } = await db
           .from("collections")
-          .select(`
+          .select(
+            `
             id,
             name,
             timestamp,
             saved_posts (
               post_id
             )
-          `)
+          `
+          )
           .eq("user_id", userId)
           .order("timestamp", { ascending: false });
 
@@ -67,14 +71,14 @@ export default function PinFeed({ userId }) {
         }
 
         console.log("Collections with saved posts:", data);
-        
-        const processedCollections = data.map(collection => ({
+
+        const processedCollections = data.map((collection) => ({
           id: collection.id,
           name: collection.name,
           timestamp: collection.timestamp,
-          pinCount: collection.saved_posts?.length || 0
+          pinCount: collection.saved_posts?.length || 0,
         }));
-        
+
         console.log("Processed collections:", processedCollections);
         setCollections(processedCollections);
       } else {
@@ -89,27 +93,58 @@ export default function PinFeed({ userId }) {
     }
   };
 
-  const renderCollectionItem = ({ item }) => (
-    <TouchableOpacity 
-      style={styles.collectionItem}
-      onPress={() => {
-        console.log("Collection pressed:", item);
-      }}
-    >
-      <View style={styles.imageContainer}>
-        <View style={styles.defaultImage} />
-      </View>
-      
-      <View style={styles.collectionInfo}>
-        <Text style={styles.collectionName} numberOfLines={1}>
-          {item.name}
-        </Text>
-        <Text style={styles.pinCount}>
-          {item.pinCount} {item.pinCount === 1 ? 'pin' : 'pins'}
-        </Text>
-      </View>
-    </TouchableOpacity>
-  );
+  const renderCollectionItem = ({ item, index }) => {
+    const getImageSource = (index) => {
+      switch (index) {
+        case 0:
+          return health;
+        case 1:
+          return sleep;
+        case 2:
+          return cooking;
+        case 3:
+          return family;
+        case 4:
+          return store;
+        default:
+          return null;
+      }
+    };
+
+    return (
+      <TouchableOpacity
+        style={styles.collectionItem}
+        onPress={() => {
+          console.log("Collection pressed:", item);
+        }}
+      >
+        <View style={styles.imageContainer}>
+          {getImageSource(index) ? (
+            <Image
+              source={getImageSource(index)}
+              style={styles.collectionImage}
+            />
+          ) : (
+            <View
+              style={[
+                styles.defaultImage,
+                { backgroundColor: Theme.colors.LightGray },
+              ]}
+            />
+          )}
+        </View>
+
+        <View style={styles.collectionInfo}>
+          <Text style={styles.collectionName} numberOfLines={1}>
+            {item.name}
+          </Text>
+          <Text style={styles.pinCount}>
+            {item.pinCount} {item.pinCount === 1 ? "pin" : "pins"}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
   if (isLoading) {
     return <Loading />;
@@ -128,7 +163,7 @@ export default function PinFeed({ userId }) {
       <FlatList
         data={collections}
         renderItem={renderCollectionItem}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.id}
         numColumns={2}
         columnWrapperStyle={styles.columnWrapper}
         contentContainerStyle={styles.listContainer}
@@ -152,46 +187,51 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   columnWrapper: {
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
     marginBottom: 16,
   },
   collectionItem: {
-    width: COLUMN_WIDTH,
+    width: 181,
   },
   imageContainer: {
-    width: COLUMN_WIDTH,
-    height: COLUMN_WIDTH,
-    borderRadius: 16,
-    overflow: 'hidden',
+    width: 181,
+    height: 128,
+    borderRadius: 20,
+    overflow: "hidden",
     marginBottom: 8,
   },
+  collectionImage: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
+  },
   defaultImage: {
-    width: '100%',
-    height: '100%',
-    backgroundColor: '#9C9CFF',
+    width: "100%",
+    height: "100%",
+    backgroundColor: Theme.colors.LightGray,
   },
   collectionInfo: {
     paddingHorizontal: 4,
   },
   collectionName: {
     fontSize: Theme.sizes.headline,
-    fontFamily: 'SF-Pro-Display-Bold',
+    fontFamily: "SF-Pro-Display-Bold",
     color: Theme.colors.textBlack,
     marginBottom: 4,
   },
   pinCount: {
     fontSize: Theme.sizes.callout,
-    fontFamily: 'SF-Pro-Display-Regular',
+    fontFamily: "SF-Pro-Display-Regular",
     color: Theme.colors.textGray,
   },
   emptyContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 32,
   },
   emptyText: {
     fontSize: Theme.sizes.headline,
-    fontFamily: 'SF-Pro-Display-Regular',
+    fontFamily: "SF-Pro-Display-Regular",
     color: Theme.colors.textGray,
   },
 });
