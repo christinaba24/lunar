@@ -15,6 +15,11 @@ import Theme from "@/assets/theme";
 import personIcon1 from "@/assets/images/personicon.png";
 import personIcon2 from "@/assets/images/man.png";
 import db from "@/database/db";
+import health from "@/assets/images/health.png";
+import cooking from "@/assets/images/cooking.png";
+import family from "@/assets/images/family.png";
+import store from "@/assets/images/store.png";
+import sleep from "@/assets/images/sleep.png";
 
 const CURRENT_USER_ID = "6bb59990-4f6b-4fd0-b475-64353b7e2abd";
 
@@ -79,6 +84,23 @@ export default function Post({
       setCollections(data);
     } catch (err) {
       console.error("Error fetching collections:", err);
+    }
+  };
+
+  const getCollectionImage = (index) => {
+    switch (index) {
+      case 0:
+        return sleep;
+      case 1:
+        return health;
+      case 2:
+        return cooking;
+      case 3:
+        return family;
+      case 4:
+        return store;
+      default:
+        return null;
     }
   };
 
@@ -271,14 +293,23 @@ export default function Post({
             )}
 
             <View style={styles.collectionsList}>
-              {collections.map((collection) => (
+              {collections.map((collection, index) => (
                 <TouchableOpacity
                   key={collection.id}
                   style={styles.collectionItem}
                   onPress={() => saveToCollection(collection.id)}
                   disabled={isLoading}
                 >
-                  <View style={styles.collectionPreview} />
+                  <View style={styles.collectionPreview}>
+                    {getCollectionImage(index) ? (
+                      <Image
+                        source={getCollectionImage(index)}
+                        style={styles.collectionImage}
+                      />
+                    ) : (
+                      <View style={[styles.defaultCollectionPreview]} />
+                    )}
+                  </View>
                   <Text style={styles.collectionName}>{collection.name}</Text>
                 </TouchableOpacity>
               ))}
@@ -366,7 +397,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     flexDirection: "row",
-    width: "25%",
+    width: "30%",
     justifyContent: "space-between",
   },
   scoreContainer: {
@@ -450,9 +481,26 @@ const styles = StyleSheet.create({
   collectionPreview: {
     width: 40,
     height: 40,
-    backgroundColor: "#9C9CFF",
     borderRadius: 8,
+    overflow: "hidden",
     marginRight: 12,
+  },
+  collectionImage: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
+  },
+  defaultCollectionPreview: {
+    width: "100%",
+    height: "100%",
+    backgroundColor: Theme.colors.LightGray,
+  },
+  collectionItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: Theme.colors.LightGray,
   },
   collectionName: {
     fontSize: Theme.sizes.headline,

@@ -1,7 +1,15 @@
 import { Link } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
-import { View, Text, StyleSheet, Image, TextInput, FlatList, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TextInput,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
 import db from "@/database/db";
 import Theme from "@/assets/theme";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -55,24 +63,56 @@ export default function Home() {
 
   // Example data for group cards
   const groups = [
-    { id: "1", title: "Palo Alto Moms", members: 50, mainPhoto: momMain, backgroundPhoto: momBack },
-    { id: "2", title: "Night Nurses", members: 82, mainPhoto: nursesMain, backgroundPhoto: nursesBack },
-    { id: "3", title: "Gym Rats", members: 143, mainPhoto: gymMain, backgroundPhoto: gymBack },
-    { id: "4", title: "LGBTQ+", members: 541, mainPhoto: lgbtqMain, backgroundPhoto: lgbtqBack },
-    { id: "5", title: "Part-Time", members: 96, mainPhoto: partMain, backgroundPhoto: partBack }
+    {
+      id: "1",
+      title: "Palo Alto Moms",
+      members: 50,
+      mainPhoto: momMain,
+      backgroundPhoto: momBack,
+    },
+    {
+      id: "2",
+      title: "Night Nurses",
+      members: 82,
+      mainPhoto: nursesMain,
+      backgroundPhoto: nursesBack,
+    },
+    {
+      id: "3",
+      title: "Gym Rats",
+      members: 143,
+      mainPhoto: gymMain,
+      backgroundPhoto: gymBack,
+    },
+    {
+      id: "4",
+      title: "LGBTQ+",
+      members: 541,
+      mainPhoto: lgbtqMain,
+      backgroundPhoto: lgbtqBack,
+    },
+    {
+      id: "5",
+      title: "Part-Time",
+      members: 96,
+      mainPhoto: partMain,
+      backgroundPhoto: partBack,
+    },
   ];
 
   return (
     <FlatList
-      style={{backgroundColor: Theme.colors.White}}
+      style={{ backgroundColor: Theme.colors.White }}
       data={groups}
       keyExtractor={(item) => item.id.toString()}
-      ListHeaderComponent={(
+      ListHeaderComponent={
         <>
           <Image source={homeTopImage} style={styles.image} />
           <View style={styles.textContainer}>
             <Text style={styles.header}>Hello, {username || "User"}!</Text>
-            <Text style={styles.statement}>Closer connections, no matter the hour.</Text>
+            <Text style={styles.statement}>
+              Closer connections, no matter the hour.
+            </Text>
           </View>
 
           {/* Search Box */}
@@ -114,15 +154,18 @@ export default function Home() {
             )}
           />
         </>
-      )}
-      ListFooterComponent={(
+      }
+      ListFooterComponent={
         <>
           <Text style={styles.subHeader}>Trending Posts</Text>
           <View style={styles.postContainer}>
-            <Feed shouldNavigateToComments={true} topPosts={activeTab === "top"} />
+            <Feed
+              shouldNavigateToComments={true}
+              topPosts={activeTab === "top"}
+            />
           </View>
         </>
-      )}
+      }
       renderItem={null}
     />
   );
@@ -147,7 +190,6 @@ const styles = StyleSheet.create({
     color: "#4747BA",
     fontWeight: "bold",
     fontFamily: "TestTiemposHeadline-Medium",
-
   },
   statement: {
     fontSize: 13,

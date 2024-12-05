@@ -30,9 +30,15 @@ export default function EmailIndex() {
 
       <Text style={styles.headerText}>Enter email</Text>
 
-      <TextInput style={styles.inputText}>
+      {/* <TextInput style={styles.inputText}>
         <Text style={styles.inputText}>Enter your email</Text>
-      </TextInput>
+      </TextInput> */}
+
+      <TextInput
+        style={styles.inputText}
+        placeholder="Enter your email"
+        placeholderTextColor="#2C2C2C"
+      />
 
       <TouchableOpacity
         style={styles.continueButton}
