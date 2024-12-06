@@ -36,12 +36,12 @@ export default function CollectionPostsFeed({ userId, collectionId }) {
         return;
       }
 
-      const postIds = savedPosts.map(post => post.post_id);
+      const postIds = savedPosts.map((post) => post.post_id);
 
-      // Fetch full post data for saved posts
+      // Fetch full post data for saved posts, including the tag field
       const { data: postsData, error: postsError } = await db
         .from("posts_with_counts")
-        .select("*")
+        .select("*, tag") // Explicitly include tag in the selection
         .in("id", postIds);
 
       if (postsError) throw postsError;
@@ -57,18 +57,18 @@ export default function CollectionPostsFeed({ userId, collectionId }) {
 
       // Create maps for votes and pin timestamps
       const votesMap = Object.fromEntries(
-        votesData.map(vote => [vote.post_id, vote.vote])
+        votesData.map((vote) => [vote.post_id, vote.vote])
       );
       const pinTimestampMap = Object.fromEntries(
-        savedPosts.map(post => [post.post_id, post.timestamp])
+        savedPosts.map((post) => [post.post_id, post.timestamp])
       );
 
       // Combine post data with votes and sort by pin timestamp
       const postsWithVotes = postsData
-        .map(post => ({
+        .map((post) => ({
           ...post,
           vote: votesMap[post.id] || 0,
-          pinTimestamp: pinTimestampMap[post.id]
+          pinTimestamp: pinTimestampMap[post.id],
         }))
         .sort((a, b) => {
           // Sort by pin timestamp (most recent first)
@@ -87,14 +87,14 @@ export default function CollectionPostsFeed({ userId, collectionId }) {
 
   const handleVote = async (postId, newVote) => {
     try {
-      setPosts(currentPosts =>
-        currentPosts.map(post => {
+      setPosts((currentPosts) =>
+        currentPosts.map((post) => {
           if (post.id === postId) {
             const voteChange = newVote - (post.vote || 0);
             return {
               ...post,
               vote: newVote,
-              like_count: post.like_count + voteChange
+              like_count: post.like_count + voteChange,
             };
           }
           return post;
@@ -108,13 +108,11 @@ export default function CollectionPostsFeed({ userId, collectionId }) {
           .eq("post_id", postId)
           .eq("user_id", userId);
       } else {
-        await db
-          .from("likes")
-          .upsert({
-            post_id: postId,
-            user_id: userId,
-            vote: newVote
-          });
+        await db.from("likes").upsert({
+          post_id: postId,
+          user_id: userId,
+          vote: newVote,
+        });
       }
     } catch (err) {
       console.error("Error updating vote:", err);
@@ -145,6 +143,7 @@ export default function CollectionPostsFeed({ userId, collectionId }) {
           commentCount={item.comment_count}
           onVote={handleVote}
           user_id={item.user_id}
+          tag={item.tag} // Add the tag prop here
         />
       )}
       contentContainerStyle={styles.posts}
@@ -168,20 +167,20 @@ export default function CollectionPostsFeed({ userId, collectionId }) {
 
 const styles = StyleSheet.create({
   postsContainer: {
-    width: "100%"
+    width: "100%",
   },
   posts: {
     gap: 10,
-    padding: 10
+    padding: 10,
   },
   errorText: {
     color: "red",
     padding: 20,
-    textAlign: "center"
+    textAlign: "center",
   },
   emptyText: {
     textAlign: "center",
     padding: 20,
-    color: Theme.colors.textSecondary
-  }
+    color: Theme.colors.textSecondary,
+  },
 });

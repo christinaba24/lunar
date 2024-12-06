@@ -1,5 +1,8 @@
+import React from "react";
 import { useState, useEffect } from "react";
 import { StyleSheet, FlatList, RefreshControl, Text } from "react-native";
+import { useRouter, useNavigation } from "expo-router";
+import { useFocusEffect } from "expo-router";
 import db from "@/database/db";
 import Theme from "@/assets/theme";
 import Post from "@/components/Post";
@@ -8,41 +11,52 @@ import timeAgo from "@/utils/timeAgo";
 
 export default function GroupFeed({
   shouldNavigateToComments = false,
-  topPosts = false, // Determines whether to fetch top or new posts
+  topPosts = false,
 }) {
+  const navigation = useNavigation();
   const [posts, setPosts] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState(null);
   const user_id = "6bb59990-4f6b-4fd0-b475-64353b7e2abd";
 
-  // Fetch posts whenever `topPosts` changes
   useEffect(() => {
     fetchPosts();
-  }, [topPosts]); // Add `topPosts` as a dependency
+  }, [topPosts]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchPosts();
+
+      const unsubscribe = navigation.addListener("focus", () => {
+        fetchPosts();
+      });
+
+      return unsubscribe;
+    }, [navigation])
+  );
 
   const fetchPosts = async () => {
     try {
       setIsLoading(true);
       setError(null);
 
-      let query = await db
-        .from("posts_with_counts")
-        .select("*")
-        .order("timestamp", { ascending: false });
-
-      if (topPosts) {
-        // Fetch top posts (sorted by like_count)
-        query = db
-          .from("posts_with_counts")
-          .select("*")
-          .order("like_count", { ascending: false });
-      }
+      // Update the query to explicitly select the tag column
+      let query = topPosts
+        ? db
+            .from("posts_with_counts")
+            .select("*, tag") // Explicitly select tag
+            .order("like_count", { ascending: false })
+        : db
+            .from("posts_with_counts")
+            .select("*, tag") // Explicitly select tag
+            .order("timestamp", { ascending: false });
 
       const { data: postsData, error: postsError } = await query;
 
       if (postsError) {
         console.error("Error fetching posts:", postsError.message);
+
         setPosts([]);
         return;
       }
@@ -145,6 +159,7 @@ export default function GroupFeed({
           commentCount={item.comment_count}
           onVote={handleVote}
           user_id={item.user_id}
+          tag={item.tag}
         />
       )}
       contentContainerStyle={styles.posts}

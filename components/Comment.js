@@ -1,14 +1,21 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Image, Modal, TouchableWithoutFeedback } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Modal,
+  TouchableWithoutFeedback,
+} from "react-native";
 import Theme from "@/assets/theme";
 import personIcon1 from "@/assets/images/personicon.png";
-import popup from "@/assets/images/popup.png";
-import NewReminder from "@/components/NewReminder";  // Import NewReminder component
+// import popup from "@/assets/images/popup.png";
+import NewReminder from "@/components/NewReminder"; // Import NewReminder component
 
 export default function Comment({ username, timestamp, text }) {
-  const [isModalVisible, setIsModalVisible] = useState(false);  // State for popup visibility
+  const [isModalVisible, setIsModalVisible] = useState(false); // State for popup visibility
   const [isNewReminderVisible, setIsNewReminderVisible] = useState(false); // State for NewReminder modal
-  const [imageWidth, setImageWidth] = useState(0);  // State for storing image width
+  const [imageWidth, setImageWidth] = useState(0); // State for storing image width
   const user_id = "6bb59990-4f6b-4fd0-b475-64353b7e2abd";
 
   // Find the index of the phrase "Smile Dentist Sunnyvale" in the comment
@@ -26,7 +33,7 @@ export default function Comment({ username, timestamp, text }) {
 
   // Handle touch on image to determine which half was clicked
   const handleImagePress = (event) => {
-    const { locationX } = event.nativeEvent;  // Get touch coordinates
+    const { locationX } = event.nativeEvent; // Get touch coordinates
 
     if (locationX < imageWidth / 2) {
       // If the left half is clicked, show the NewReminder modal
@@ -37,7 +44,7 @@ export default function Comment({ username, timestamp, text }) {
   // Get image width via onLayout event
   const handleImageLayout = (event) => {
     const { width } = event.nativeEvent.layout;
-    setImageWidth(width);  // Store the width in state
+    setImageWidth(width); // Store the width in state
   };
 
   return (
@@ -64,7 +71,7 @@ export default function Comment({ username, timestamp, text }) {
         </View>
       </View>
 
-      {/* Modal for displaying the popup image */}
+      {/* Modal for displaying the popup image
       <Modal
         transparent={true}
         visible={isModalVisible}
@@ -73,7 +80,7 @@ export default function Comment({ username, timestamp, text }) {
       >
         <TouchableWithoutFeedback onPress={handleOutsidePress}>
           <View style={styles.modalOverlay}>
-            {/* Touchable image inside the modal to detect click */}
+            {/* Touchable image inside the modal to detect click
             <TouchableWithoutFeedback onPress={handleImagePress}>
               <Image
                 source={popup}
@@ -85,12 +92,12 @@ export default function Comment({ username, timestamp, text }) {
         </TouchableWithoutFeedback>
       </Modal>
 
-      {/* NewReminder Modal */}
+      {/* NewReminder Modal
       <Modal
         visible={isNewReminderVisible}
         transparent={true}
         animationType="fade"
-        onRequestClose={() => setIsNewReminderVisible(false)}
+        onRequestClos ={() => setIsNewReminderVisible(false)}
       >
         <NewReminder
           title="Smile Dentist Sunnyvale"
@@ -100,7 +107,7 @@ export default function Comment({ username, timestamp, text }) {
             // Optionally fetch reminders if needed
           }}
         />
-      </Modal>
+      </Modal> */}
     </View>
   );
 }
@@ -142,7 +149,7 @@ const styles = StyleSheet.create({
     fontFamily: "SF-Pro-Display-Bold",
   },
   timestamp: {
-    color: Theme.colors.textGray,  // Changed to match Post component
+    color: Theme.colors.textGray, // Changed to match Post component
     fontSize: Theme.sizes.callout,
     fontFamily: "SF-Pro-Display-Regular",
   },
