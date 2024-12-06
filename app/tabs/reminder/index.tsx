@@ -39,7 +39,8 @@ export default function ReminderScreen() {
   const [recurringReminders, setRecurringReminders] = useState<Reminder[]>([]);
   const [otherReminders, setOtherReminders] = useState<Reminder[]>([]);
   const [isNewReminderVisible, setIsNewReminderVisible] = useState(false);
-  const [isCalendarOverlayVisible, setIsCalendarOverlayVisible] = useState(false);
+  const [isCalendarOverlayVisible, setIsCalendarOverlayVisible] =
+    useState(false);
   const translateY = useRef(new Animated.Value(500)).current; // Start off-screen
 
   useEffect(() => {
@@ -144,14 +145,19 @@ export default function ReminderScreen() {
       {/* Calendar Sync Overlay */}
       {isCalendarOverlayVisible && (
         <Modal transparent={true} animationType="none">
-        <TouchableOpacity style={styles.overlay}>
-          <Animated.View style={[styles.animatedContainer, { transform: [{ translateY }] },]}>
-            <TouchableOpacity onPress={hideCalendarOverlay}>
-              <Image source={calendarSync} style={styles.calendarImage} />
-            </TouchableOpacity>
-          </Animated.View>
-        </TouchableOpacity>
-      </Modal>
+          <TouchableOpacity style={styles.overlay}>
+            <Animated.View
+              style={[
+                styles.animatedContainer,
+                { transform: [{ translateY }] },
+              ]}
+            >
+              <TouchableOpacity onPress={hideCalendarOverlay}>
+                {/* <Image source={calendarSync} style={styles.calendarImage} /> */}
+              </TouchableOpacity>
+            </Animated.View>
+          </TouchableOpacity>
+        </Modal>
       )}
     </SafeAreaView>
   );

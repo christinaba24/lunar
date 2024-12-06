@@ -145,6 +145,7 @@ export default function GroupFeed({
           commentCount={item.comment_count}
           onVote={handleVote}
           user_id={item.user_id}
+          tag={item.tag}
         />
       )}
       contentContainerStyle={styles.posts}
