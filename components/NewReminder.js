@@ -305,7 +305,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 0,
     top: '50%',
-    transform: [{ translateY: -12 }],
+    transform: [{ translateY: -9 }],
   },
   repeatSection: {
     marginBottom: 8,
