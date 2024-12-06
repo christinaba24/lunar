@@ -12,18 +12,24 @@ import { useNavigation, useRouter } from "expo-router";
 import db from "@/database/db";
 import Theme from "@/assets/theme";
 
+type TagType = "bay-area" | "help" | "tips" | null;
+
+type TagButtonProps = {
+  tag: Exclude<TagType, null>;
+};
+
 export default function NewPost() {
-  const [username, setUsername] = useState(null);
-  const [inputText, setInputText] = useState("");
-  const [isAnonymous, setIsAnonymous] = useState(false); // State for the toggle
-  const [isLoading, setIsLoading] = useState(false);
+  const [username, setUsername] = useState<string | null>(null);
+  const [inputText, setInputText] = useState<string>("");
+  const [isAnonymous, setIsAnonymous] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [selectedTag, setSelectedTag] = useState<TagType>(null);
   const router = useRouter();
   const navigation = useNavigation();
   const user_id = "6bb59990-4f6b-4fd0-b475-64353b7e2abd";
   const other_user_id = "2bbcaafe-ead1-4542-9ca6-7560bca59855";
 
   useEffect(() => {
-    // Fetch username when the component mounts
     const fetchUsername = async () => {
       try {
         const { data, error } = await db
@@ -50,14 +56,16 @@ export default function NewPost() {
     try {
       setIsLoading(true);
 
-      const { error } = await db.from("posts").insert({
+      const postData = {
         user_id: isAnonymous ? other_user_id : user_id,
-        username: isAnonymous ? "Anonymous" : username, // Use the toggle state
+        username: isAnonymous ? "Anonymous" : username,
         text: inputText.trim(),
-      });
+        tag: selectedTag ? `#${selectedTag}` : null,
+      };
+
+      const { data, error } = await db.from("posts").insert(postData).select();
 
       if (error) {
-        console.error("Error submitting post:", error);
         Alert.alert("Error", "Failed to submit post. Please try again.");
         return;
       }
@@ -65,7 +73,6 @@ export default function NewPost() {
       Alert.alert("Success", "Post submitted successfully.");
       router.back();
     } catch (err) {
-      console.error("Error submitting post:", err);
       Alert.alert("Error", "An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);
@@ -95,28 +102,83 @@ export default function NewPost() {
         </Pressable>
       ),
     });
-  }, [inputText, isLoading, navigation]);
+  }, [inputText, isLoading, navigation, selectedTag]);
 
   const handleToggle = () => {
     setIsAnonymous((prev) => !prev);
+  };
+
+  const handleTagSelect = (tag: TagType) => {
+    setSelectedTag(selectedTag === tag ? null : tag);
+  };
+
+  const getBackgroundColor = (tag: TagType) => {
+    switch (tag) {
+      case "bay-area":
+        return "#E1F9F2";
+      case "help":
+        return "#F9E1E5";
+      case "tips":
+        return "#FFE3AA";
+      default:
+        return "transparent";
+    }
+  };
+
+  const TagButton: React.FC<TagButtonProps> = ({ tag }) => {
+    const isSelected = selectedTag === tag;
+
+    return (
+      <Pressable
+        onPress={() => handleTagSelect(tag)}
+        style={[
+          styles.tagButton,
+          {
+            backgroundColor: isSelected
+              ? getBackgroundColor(tag)
+              : "transparent",
+            borderWidth: isSelected ? 0 : 1,
+            borderColor: Theme.colors.LightGray,
+          },
+        ]}
+      >
+        <Text
+          style={[
+            styles.tagText,
+            {
+              color: isSelected
+                ? Theme.colors.textBlack
+                : Theme.colors.textGray,
+            },
+          ]}
+        >
+          #{tag}
+        </Text>
+      </Pressable>
+    );
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.postingHeader}>
         <Text style={styles.usernameHeader}>
-          Post as {isAnonymous ? `"Anonymous"` : `"${username || "Loading..."}"`}
+          Post as{" "}
+          {isAnonymous ? `"Anonymous"` : `"${username || "Loading..."}"`}
         </Text>
         <View style={styles.toggleContainer}>
           <Pressable onPress={handleToggle} style={styles.toggleButton}>
-          <Text
-            style={[
-              styles.toggleText,
-              { color: isAnonymous ? Theme.colors.PurpleDark : Theme.colors.textGray }
-            ]}
+            <Text
+              style={[
+                styles.toggleText,
+                {
+                  color: isAnonymous
+                    ? Theme.colors.PurpleDark
+                    : Theme.colors.textGray,
+                },
+              ]}
             >
-            Anonymous
-          </Text>
+              Anonymous
+            </Text>
             <View
               style={[
                 styles.toggleSwitch,
@@ -142,31 +204,39 @@ export default function NewPost() {
         multiline
         autoFocus
       />
+      <View style={styles.tagContainer}>
+        <TagButton tag="bay-area" />
+        <TagButton tag="help" />
+        <TagButton tag="tips" />
+        <Pressable style={styles.addTagButton}>
+          <Text style={styles.addTagText}>+</Text>
+        </Pressable>
+      </View>
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
     backgroundColor: Theme.colors.White,
+    position: "relative",
   },
   postingHeader: {
     width: "100%",
     padding: 16,
     backgroundColor: Theme.colors.White,
-    flexDirection: "column", // Ensure vertical stacking
-    justifyContent: "flex-start", // Align items to the top
+    flexDirection: "column",
+    justifyContent: "flex-start",
   },
   usernameHeader: {
     color: "#7a7a7a",
     backgroundColor: Theme.colors.White,
     fontSize: 15,
-    paddingBottom: 8, // Add spacing below the text
+    paddingBottom: 8,
     paddingLeft: 5,
-    width: "100%", // Full width
+    width: "100%",
   },
   toggleContainer: {
     width: "100%",
@@ -213,9 +283,39 @@ const styles = StyleSheet.create({
   input: {
     color: Theme.colors.textBlack,
     backgroundColor: Theme.colors.White,
-    flex: 1,
     width: "100%",
+    height: "75%",
     padding: 16,
   },
+  tagContainer: {
+    flexDirection: "row",
+    padding: 16,
+    gap: 8,
+    width: "100%",
+  },
+  tagButton: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    minHeight: 28,
+  },
+  tagText: {
+    fontSize: Theme.sizes.callout,
+    fontFamily: "SF-Pro-Display-Regular",
+    lineHeight: 20,
+  },
+  addTagButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: Theme.colors.LightGray,
+  },
+  addTagText: {
+    fontSize: 14,
+    color: Theme.colors.textGray,
+    fontFamily: "SF-Pro-Display-Regular",
+  },
 });
-
