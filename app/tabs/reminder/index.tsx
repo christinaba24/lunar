@@ -153,7 +153,7 @@ export default function ReminderScreen() {
               ]}
             >
               <TouchableOpacity onPress={hideCalendarOverlay}>
-                {/* <Image source={calendarSync} style={styles.calendarImage} /> */}
+                <Image source={calendarSync} style={styles.calendarImage} />
               </TouchableOpacity>
             </Animated.View>
           </TouchableOpacity>

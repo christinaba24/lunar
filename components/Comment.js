@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import Theme from "@/assets/theme";
 import personIcon1 from "@/assets/images/personicon.png";
-// import popup from "@/assets/images/popup.png";
+import popup from "@/assets/images/popup.png";
 import NewReminder from "@/components/NewReminder"; // Import NewReminder component
 
 export default function Comment({ username, timestamp, text }) {
@@ -71,7 +71,7 @@ export default function Comment({ username, timestamp, text }) {
         </View>
       </View>
 
-      {/* Modal for displaying the popup image
+      {/* Modal for displaying the popup image */}
       <Modal
         transparent={true}
         visible={isModalVisible}
@@ -80,7 +80,7 @@ export default function Comment({ username, timestamp, text }) {
       >
         <TouchableWithoutFeedback onPress={handleOutsidePress}>
           <View style={styles.modalOverlay}>
-            {/* Touchable image inside the modal to detect click
+            {/* Touchable image inside the modal to detect click */}
             <TouchableWithoutFeedback onPress={handleImagePress}>
               <Image
                 source={popup}
@@ -92,7 +92,7 @@ export default function Comment({ username, timestamp, text }) {
         </TouchableWithoutFeedback>
       </Modal>
 
-      {/* NewReminder Modal
+      {/* NewReminder Modal */}
       <Modal
         visible={isNewReminderVisible}
         transparent={true}
@@ -107,7 +107,7 @@ export default function Comment({ username, timestamp, text }) {
             // Optionally fetch reminders if needed
           }}
         />
-      </Modal> */}
+      </Modal>
     </View>
   );
 }
