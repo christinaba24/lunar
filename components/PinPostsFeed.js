@@ -37,10 +37,10 @@ export default function PinPostsFeed({ userId }) {
 
       const postIds = savedPosts.map((post) => post.post_id);
 
-      // Fetch full post data for saved posts
+      // Fetch full post data for saved posts (including the tag field)
       const { data: postsData, error: postsError } = await db
         .from("posts_with_counts")
-        .select("*")
+        .select("*, tag") // Explicitly include tag in the selection
         .in("id", postIds);
 
       if (postsError) throw postsError;
@@ -142,6 +142,7 @@ export default function PinPostsFeed({ userId }) {
           commentCount={item.comment_count}
           onVote={handleVote}
           user_id={item.user_id}
+          tag={item.tag} // Add the tag prop here
         />
       )}
       contentContainerStyle={styles.posts}

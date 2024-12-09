@@ -34,6 +34,7 @@ export default function Post({
   commentCount,
   onVote,
   user_id,
+  tag,
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const [isPinned, setIsPinned] = useState(false);
@@ -212,18 +213,32 @@ export default function Post({
         <Text style={styles.text}>{text}</Text>
       </View>
       <View style={styles.footer}>
-        <View style={styles.scoreContainer}>
-          {likeButton}
-          <Text style={styles.commentCount}>{score}</Text>
+        <View style={styles.interactionContainer}>
+          <View style={styles.scoreContainer}>
+            {likeButton}
+            <Text style={styles.commentCount}>{score}</Text>
+          </View>
+          <View style={styles.comment}>
+            <FontAwesome
+              size={Theme.sizes.icons}
+              name="comment-o"
+              color={"#888"}
+            />
+            <Text style={styles.commentCount}>{commentCount}</Text>
+          </View>
         </View>
-        <View style={styles.comment}>
-          <FontAwesome
-            size={Theme.sizes.icons}
-            name="comment-o"
-            color={"#888"}
-          />
-          <Text style={styles.commentCount}>{commentCount}</Text>
-        </View>
+        {tag && (
+          <View
+            style={[
+              styles.tagContainer,
+              tag === "#bay-area" && styles.bayAreaTag,
+              tag === "#help" && styles.helpTag,
+              tag === "#tips" && styles.tipsTag,
+            ]}
+          >
+            <Text style={styles.tagText}>{tag}</Text>
+          </View>
+        )}
       </View>
 
       <Modal
@@ -395,11 +410,6 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "column",
   },
-  footer: {
-    flexDirection: "row",
-    width: "30%",
-    justifyContent: "space-between",
-  },
   scoreContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -561,5 +571,50 @@ const styles = StyleSheet.create({
     color: Theme.colors.PurpleMedium,
     fontSize: Theme.sizes.headline,
     fontFamily: "SF-Pro-Display-Bold",
+  },
+  footer: {
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+
+  interactionContainer: {
+    flexDirection: "row",
+    gap: 14,
+  },
+
+  scoreContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  comment: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  tagContainer: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 50,
+  },
+
+  bayAreaTag: {
+    backgroundColor: "#E1F9F2",
+  },
+
+  helpTag: {
+    backgroundColor: "#F9E1E5",
+  },
+
+  tipsTag: {
+    backgroundColor: "#FFE3AA",
+  },
+
+  tagText: {
+    fontSize: Theme.sizes.callout,
+    fontFamily: "SF-Pro-Display-Regular",
+    color: Theme.colors.textBlack,
   },
 });
