@@ -9,7 +9,8 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.lunar147.lunar"
     },
     "splash": {
       "image": "./assets/splash-icon.png",
@@ -53,6 +54,12 @@
         "projectId": "1c27bc9b-1f3c-4f1c-b1c2-c25435f24f99"
       }
     },
-    "owner": "lunar-147"
+    "owner": "lunar-147",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/1c27bc9b-1f3c-4f1c-b1c2-c25435f24f99"
+    }
   }
 }
